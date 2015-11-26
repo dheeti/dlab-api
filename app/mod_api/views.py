@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 from app import app
 
 
-mod_api = Blueprint('api', __name__, url_prefix='/')
+mod_api = Blueprint('api', __name__, url_prefix='/api')
 
 @mod_api.errorhandler(422)
 def handle_bad_request(err):
