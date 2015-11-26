@@ -16,7 +16,7 @@ def handle_bad_request(err):
 
 
 @mod_api.route('/')
-def index():
+def api_index():
     return jsonify(response="API Index")
 
 

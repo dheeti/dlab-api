@@ -8,3 +8,4 @@ from app.mod_api.views import mod_api as api_module
 
 app.register_blueprint(api_module)
 
+from app import views
