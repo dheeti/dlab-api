@@ -11,11 +11,11 @@
   
 * **URL**
 
-  + `/value?id=:id`
-  + `/objective?id=:id`
-  + `/policy?id=:id`
-  + `/issue?id=:id`
-  + `/community?id=:id`
+  + `/value?id=integer`
+  + `/objective?id=integer`
+  + `/policy?id=integer`
+  + `/issue?id=integer`
+  + `/community?id=integer`
 
 * **Method:**
   
