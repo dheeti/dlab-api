@@ -4,4 +4,4 @@ from app import app
 
 @app.route('/')
 def index():
-    return ROOT API
+    return "ROOT API"
