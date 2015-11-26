@@ -42,7 +42,8 @@
 
 **Retrieve All Data for an Entity type**
 ----
-  Retrieve all entities of a specific type (Values|Objectives|Policies|Issues|Communities).
+  Retrieve all entities of a specific type
+  `Values|Objectives|Policies|Issues|Communities)`.
   
 * **URL**
 
@@ -77,7 +78,7 @@
 
 **Rank an Entity**
 ----
-  Assign a user rank to an entity (Value|Objective|Policy|Issue).
+  Assign a user rank to an entity `Value|Objective|Policy|Issue)`.
   
 * **URL**
 
@@ -93,7 +94,7 @@
   {
       user_id: [integer],
       issue_id: [integer],
-      entity_id: [integer],
+      entity_id: [integer], // can be `Value|Objective|Policy|Issue` entity
       rank: [integer]
   }
   ```
@@ -113,7 +114,7 @@
 
 **Map two Entities**
 ----
-  Create a user map between two entities (Value->Objective|Objective->Policy).
+  Create a user map between two entities `Value->Objective|Objective->Policy)`.
   
 * **URL**
 
@@ -129,9 +130,9 @@
   {
       user_id: [integer],
       issue_id: [integer],
-      type: [1|2],  // 1 == Value -> Objective == 1, 2 == Objective -> Policy
-      start_id: [integer],
-      end_id: [integer]
+      type: [1|2],  // 1 == Value -> Objective, 2 == Objective -> Policy
+      src_id: [integer],
+      dest_id: [integer]
   }
   ```
   
