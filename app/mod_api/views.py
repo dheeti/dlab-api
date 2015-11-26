@@ -30,7 +30,7 @@ def get_entity_response(entity_id, name, desc):
 @mod_api.route('/value', methods=['GET'])
 @use_args(entity_args)
 def get_value(args):
-    valud_id = args["id"]
+    value_id = args["id"]
     response = get_entity_response(value_id, "Fairness", "We can share")
     return jsonify(response)
 
