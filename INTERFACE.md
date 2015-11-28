@@ -2,12 +2,16 @@
 
 [Template](https://gist.github.com/iros/3426278)
 
+**Basic Functionality**
 
-
++ Retrieve single node *(GET)*
++ Retrieve all nodes of a certain type (filterable) *(GET)*
++ Rank a node as a user *(POST)*
++ Map a connection between two nodes *(POST)*
 
 **Retrieve Entity Data**
 ----
-  Retrieve data associated with a specific (Value|Objective|Policy|Issue|Community) entity.
+  Retrieve data associated with a specific `Value|Objective|Policy|Issue|Community` entity.
   
 * **URL**
 
@@ -78,7 +82,7 @@
 
 **Rank an Entity**
 ----
-  Assign a user rank to an entity `Value|Objective|Policy|Issue)`.
+  Assign a user rank to an entity `Value|Objective|Policy|Issue`.
   
 * **URL**
 
@@ -114,7 +118,7 @@
 
 **Map two Entities**
 ----
-  Create a user map between two entities `Value->Objective|Objective->Policy)`.
+  Create a user map between two entities `Value->Objective|Objective->Policy`.
   
 * **URL**
 
