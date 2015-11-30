@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 from app import app
 
 
-mod_api = Blueprint('api', __name__, url_prefix='/')
+mod_api = Blueprint('api', __name__, url_prefix='/api')
 
 @mod_api.errorhandler(422)
 def handle_bad_request(err):
@@ -16,7 +16,7 @@ def handle_bad_request(err):
 
 
 @mod_api.route('/')
-def index():
+def api_index():
     return jsonify(response="API Index")
 
 
@@ -30,7 +30,7 @@ def get_entity_response(entity_id, name, desc):
 @mod_api.route('/value', methods=['GET'])
 @use_args(entity_args)
 def get_value(args):
-    valud_id = args["id"]
+    value_id = args["id"]
     response = get_entity_response(value_id, "Fairness", "We can share")
     return jsonify(response)
 
