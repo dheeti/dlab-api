@@ -2,3 +2,4 @@ uwsgi
 flask
 webargs
 requests
+py2neo

@@ -1,1 +1,1 @@
-CONFIG_KEY = "CONFIG_VALUE"
+NEO4J_URI = "http://localhost:7474/db/data"
