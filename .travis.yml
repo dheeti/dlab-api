@@ -2,3 +2,6 @@ language: python
 python: "2.7"
 install: "pip install -r requirements.txt"
 script: python tests/basic_tests.py
+branches:
+  only:
+    - v0.3
