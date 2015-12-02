@@ -14,6 +14,9 @@ on the Servers Trello board on Neo4j -> NEO4J_URI.
 # set environment variable to a running Neo4j instance
 export NEO4J_URI=<uri access string>
 
+# if running a capstone neo4j vagrant vm use:
+# http://neo4j:neo@localhost:7474/db/data
+
 # run all tests
 ./env/bin/nosetests
 
