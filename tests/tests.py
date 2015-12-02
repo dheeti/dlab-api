@@ -2,6 +2,8 @@ import os
 import json
 import unittest
 import sys
+import uuid
+
 import py2neo
 
 # add parent directory to path to import app
@@ -22,19 +24,20 @@ class BasicTest(unittest.TestCase):
         self.assertEqual(rv.data, expected)
 
     def test_api_index(self):
-        # trailing '/' is required when testing because flask returns 301 otherwise
+        # trailing '/' is required when testing because
+        # flask is weird and returns 301 otherwise
         rv = self.app.get('/api/') 
         expected = dict(response="API Index")
         response = json.loads(rv.data)
         self.assertEqual(response, expected)
 
 
-
 class UserTests(unittest.TestCase):
     
     def setUp(self):
         self.app = app.test_client()
-        self.user = "testuser"
+        # create random username
+        self.user = "testuser-{0}".format(uuid.uuid4())
         self.endpoint = "/api/user"
         self.data = dict(username=self.user, name="Test", city="Portland")
 
