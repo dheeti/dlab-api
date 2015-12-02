@@ -12,25 +12,6 @@ sys.path.append(root)
 
 from app import app, graph
 
- 
-class BasicTest(unittest.TestCase):
-    
-    def setUp(self):
-        self.app = app.test_client()
-    
-    def test_index(self):
-        rv = self.app.get('/')
-        expected = "ROOT API"
-        self.assertEqual(rv.data, expected)
-
-    def test_api_index(self):
-        # trailing '/' is required when testing because
-        # flask is weird and returns 301 otherwise
-        rv = self.app.get('/api/') 
-        expected = dict(response="API Index")
-        response = json.loads(rv.data)
-        self.assertEqual(response, expected)
-
 
 class UserTests(unittest.TestCase):
     
