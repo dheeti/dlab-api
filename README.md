@@ -11,10 +11,14 @@ on the Servers Trello board on Neo4j -> NEO4J_URI.
 # create python virtual environment and fetch dependencies
 ./setup.sh
 
+# set environment variable to a running Neo4j instance
 export NEO4J_URI=<uri access string>
 
-# run api script with the new virtual environment
-env/bin/python run.py
+# run all tests
+./env/bin/nosetests
+
+# start local api server
+./env/bin/python run.py
 ```
 
 You should now have the api server running at 127.0.0.1:9000
