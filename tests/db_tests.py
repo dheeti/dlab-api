@@ -67,7 +67,7 @@ class UserTests(unittest.TestCase):
         # make sure user exists
         graph.create_user(self.data)
 
-        # submit POST request to create new user
+        # submit GET request to retrieve user data
         rv = self.app.get("/api/user", data=dict(id=self.user))
         
         # confirm JSON response matches what we expect
