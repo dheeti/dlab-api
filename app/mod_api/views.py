@@ -106,3 +106,24 @@ def handle_node_request(args, node_type):
             id=node.properties["node_id"]
         )
     return jsonify(error="No matching node: {0}".format(args["id"]))
+
+
+rank_args = {
+    'user_id':fields.Str(required=True),
+    'node_id':fields.Str(required=True),
+    'issue_id':fields.Str(required=True),
+    'rank':fields.Int(required=True)
+}
+
+
+@mod_api.route('/value', methods=["POST"])
+@use_args(rank_args)
+def rank_value(args):
+    return handle_rank_request(args, "Value")
+
+
+def handle_rank_request(args, node_type):
+    success, error = graph.rank(args, node_type)
+    if success:
+        return jsonify(success=success)
+    return jsonify(success=success, error=error)
