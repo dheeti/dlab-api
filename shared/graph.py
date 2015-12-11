@@ -1,4 +1,4 @@
-from py2neo import Graph as NeoGraph, Node
+from py2neo import Graph as NeoGraph, Node, Relationship
 
 
 class Graph(object):
@@ -9,6 +9,10 @@ class Graph(object):
     def find_node(self, label, node_id):
         args = dict(property_key="node_id", property_value=node_id)
         return self.graph.find_one(label, **args)
+
+    def find_link(self, start_node, end_node, rel_type):
+        args = dict(start_node=start_node, end_node=end_node, rel_type=rel_type)
+        return self.graph.match_one(**args)
 
     def create_user(self, args):
         node = self.find_node("User", args["username"])
@@ -29,3 +33,35 @@ class Graph(object):
             self.graph.delete(node)    
             return True
         return False
+    
+    def delete_link(self, start, end, link_type):
+        if start and end:
+            link = self.find_link(start, end, link_type)
+            if link:
+                self.graph.delete(link)
+                return True
+        return False
+
+    def rank(self, args, node_type):
+        success = False
+        errors = []
+        
+        user = self.find_node("User", args["user_id"])
+        if not user: return False, "invalid user_id"
+      
+        node = self.find_node(node_type, args["node_id"])
+        if not node: return False, "invalid node_id"
+
+        link = self.find_link(user, node, "RANKS")
+        if link and link.properties["issue_id"] == args["issue_id"]:
+            link.properties["rank"] = args["rank"]
+            link.push()
+        else:
+            properties = {
+                "user_id":args["user_id"],
+                "issue_id":args["issue_id"],
+                "rank":args["rank"]
+            }
+            self.graph.create(Relationship(user, "RANKS", node, **properties))
+        return True, "" 
+
