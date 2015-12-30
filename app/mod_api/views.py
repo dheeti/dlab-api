@@ -44,13 +44,13 @@ def get_node(args):
 """
 apply a ranking to a specific node as a user
 """
-@mod_api.route('/issue', methods=["POST"])
-@mod_api.route('/value', methods=["POST"])
-@mod_api.route('/objective', methods=["POST"])
-@mod_api.route('/policy', methods=["POST"])
+@mod_api.route('/issue/rank', methods=["POST"])
+@mod_api.route('/value/rank', methods=["POST"])
+@mod_api.route('/objective/rank', methods=["POST"])
+@mod_api.route('/policy/rank', methods=["POST"])
 @use_args(Args.post_rank)
 def post_rank(args):
-    node = os.path.basename(request.path).capitalize()
+    node = os.path.basename(os.path.dirname(request.path)).capitalize()
     return Handler.post_rank(args, node)
 
 
