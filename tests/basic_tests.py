@@ -8,6 +8,7 @@ import sys
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
 
+
 from app import app, graph
 
  
@@ -32,6 +33,3 @@ class BasicTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-

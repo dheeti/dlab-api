@@ -45,23 +45,23 @@ class Graph(object):
     def rank(self, args, node_type):
         success = False
         errors = []
-        
+
         user = self.find_node("User", args["user_id"])
         if not user: return False, "invalid user_id"
       
         node = self.find_node(node_type, args["node_id"])
         if not node: return False, "invalid node_id"
-
+        
         link = self.find_link(user, node, "RANKS")
-        if link and link.properties["issue_id"] == args["issue_id"]:
+        if link and ("issue_id" not in args or
+                link.properties["issue_id"] == args["issue_id"]):
             link.properties["rank"] = args["rank"]
             link.push()
         else:
             properties = {
                 "user_id":args["user_id"],
-                "issue_id":args["issue_id"],
                 "rank":args["rank"]
             }
+            if "issue_id" in args: properties["issue_id"] = args["issue_id"]
             self.graph.create(Relationship(user, "RANKS", node, **properties))
         return True, "" 
-
