@@ -1,13 +1,9 @@
 import os
 
 from flask import Blueprint, request, jsonify
-#from webargs import fields
-
 from webargs.flaskparser import use_args
 
-#from py2neo import Graph, Node, Relationship
-
-from app import app, graph
+from app import graph
 from handlers import Handler
 from args import Args
 
@@ -28,6 +24,7 @@ def handle_bad_request(err):
 @mod_api.route('/')
 def api_index():
     return Handler.index()
+
 
 """
 retrieve data about a node as specified by it's node_id
@@ -55,6 +52,7 @@ apply a ranking to a specific node as a user
 def post_rank(args):
     node = os.path.basename(request.path).capitalize()
     return Handler.post_rank(args, node)
+
 
 """
 create a new user
