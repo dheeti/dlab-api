@@ -6,15 +6,17 @@ import uuid
 
 import py2neo
 
+
 # add parent directory to path to import app
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
+
 
 from app import app, graph
 
 
 class UserTests(unittest.TestCase):
-    
+
     def setUp(self):
         self.app = app.test_client()
         # create random username
@@ -83,7 +85,7 @@ class UserTests(unittest.TestCase):
         graph.delete_user(self.user)
 
 
-class UserRankNode(unittest.TestCase):
+class UserRankTests(unittest.TestCase):
     
     def setUp(self):
         self.app = app.test_client()
@@ -169,6 +171,49 @@ class UserRankNode(unittest.TestCase):
         response = json.loads(data)
         error = "expecting: {0}, actual: {1}".format(expected, response)
         assert response == expected, error
+
+
+class GetNodeTests(unittest.TestCase):
+
+    issue = "i1"
+    value = "v1"
+    objective = "o1"
+    policy = "p1"
+
+    def setUp(self):
+        self.app = app.test_client()
+        # create random user for testing
+        self.user = "testuser-{0}".format(uuid.uuid4())
+        user_data = dict(username=self.user, name="Test", city="Portland")
+        graph.create_user(user_data)
+    
+    def get_runner(self, endpoint, node_id):
+        data = dict(id=node_id)
+        
+        # submit GET request to retrieve node data
+        rv = self.app.get(endpoint, data=data)
+        
+        # confirm JSON response contains input node_id
+        response = json.loads(rv.data)
+        contains_id = set(data.items()).issubset(set(response.items()))
+        assert contains_id, "response does not contain node id"
+        return response
+
+    def test_get_issue(self):
+        self.get_runner("/api/issue", self.issue)
+    
+    def test_get_value(self):
+        self.get_runner("/api/value", self.value)
+     
+    def test_get_policy(self):
+        self.get_runner("/api/policy", self.policy)
+  
+    def test_get_objective(self):
+        self.get_runner("/api/objective", self.objective)
+
+    def tearDown(self):
+        # cleanup testuser
+        graph.delete_user(self.user)
 
 
 if __name__ == '__main__':
