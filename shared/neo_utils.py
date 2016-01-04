@@ -1,5 +1,5 @@
 import sys
-from os.path import dirname, abspath
+from os.path import basename, dirname, abspath
 import json
 import unittest
 import uuid
@@ -7,7 +7,7 @@ import uuid
 import py2neo
 
 # add parent directory to path to allow importing app
-root = dirname(dirname(dirname(abspath(__file__))))
+root = dirname(abspath(__file__))
 sys.path.append(root)
 
 from app import app, graph
@@ -52,7 +52,16 @@ class User(object):
         if self.success: handler.add_node(self.node)
 
 
-class Rank(object):
+class Link(object):
+
+    def __init__(self, handler, src, dst, rel_type):
+        self.src = src
+        self.dst = dst
+        self.link = graph.links.create(src, dst, rel_type, {})
+        handler.add_link(self.link)
+
+
+class Rank(Link):
 
     def __init__(self, handler, src, dst, rank):
         self.src = src

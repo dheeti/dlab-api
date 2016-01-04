@@ -11,7 +11,7 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
-from neo_utils import Handler, User, Node, Rank
+from shared.neo_utils import Handler, User, Node, Rank
 
 
 class MapTest(unittest.TestCase):
