@@ -7,9 +7,9 @@
 
 + Create a user *(POST)*
 + Retrieve a node *(GET)*
++ Retrieve all nodes of a given type *(GET)*
 + Rank a node as a user *(POST)*
 + Map a connection between two nodes *(POST)*
-+ Retrieve all nodes of a certain type *(GET)*  **NOT IMPLEMENTED**
 
 
 **Create User**
@@ -78,6 +78,39 @@
 
   * **Code:** 200 OK <br />
     **Content:** `{ keys : values }`
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
+
+**Retrieve All Data for a specific entity type**
+----
+  Retrieve all entities of a specific type for `Communities|Issues|Values|Objectives|Policies`.
+  
+* **Method:**
+  
+  `GET`  
+  
+* **URL**
+
+  + `/api/communnity`
+  + `/api/community/issue?filter_id=string` *filter_id* must be valid **Community** node id
+  + `/api/issue/value?filter_id=string` *filter_id* must be valid **Issue** node id
+  + `/api/issue/objective?filter_id=string` *filter_id* must be valid **Issue** node id
+  + `/api/issue/policy?filter_id=string` *filter_id* must be valid **Issue** node id
+
+*  **URL Params**
+
+   **Required:**
+   `filter_id=[string]` For all endpoints except `/api/community`
+  
+
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:** `{ nodes : [ { id : [integer], ... }, ... ] }`
  
 * **Error Response:**
 
@@ -171,36 +204,4 @@
     **Cause:** Invalid request parameters
 
 
-# TO IMPLEMENT
 
-**Retrieve All Data for an Entity type**
-----
-  Retrieve all entities of a specific type for `Values|Objectives|Policies|Issues|Communities`.
-  
-* **Method:**
-  
-  `GET`  
-  
-* **URL**
-
-  + `/api/values`
-  + `/api/objectives?issue_id=integer`
-  + `/api/policies?issue_id=integer`
-  + `/api/issues?community_id=integer`
-  + `/api/communities`
-
-*  **URL Params**
-
-   **Required:**
-    + For `objectives` or `policies` requests `issue_id=[integer]` param is required
-    + For `issues` requests `community_id=[integer]` param is required
-
-* **Success Response:**
-
-  * **Code:** 200 OK <br />
-    **Content:** `{ nodes : [ { id : [integer], ... }, ... ] }`
- 
-* **Error Response:**
-
-  * **Code:** 422 UNPROCESSABLE ENTITY <br />
-    **Cause:** Invalid request parameters

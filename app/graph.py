@@ -9,6 +9,15 @@ class Nodes(object):
     def find(self, label, node_id):
         args = dict(property_key="node_id", property_value=node_id)
         return self.graph.find_one(label, **args)
+    
+    def find_all(self, label, **kwargs):
+        if "parent_label" in kwargs and "parent_id" in kwargs:
+            parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
+            if parent:
+                return [ link.end_node.properties for link in parent.match() ]
+        else:
+            return [ node.properties for node in self.graph.find(label) ]
+
 
     def create(self, node_type, properties):
         node = Node(node_type, **properties)
@@ -91,6 +100,8 @@ class Graph(object):
         return True, "" 
     
     def user_map(self, args, src_node, dst_node):
+        # TODO refactor this into smaller units
+
         success = False
         errors = []
 
@@ -135,4 +146,5 @@ class Graph(object):
                 dst_rank=dst_rank
             )
             self.graph.create(Relationship(user, "MAPS", map_node, **properties))
+        
         return True, ""

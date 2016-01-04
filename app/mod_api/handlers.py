@@ -1,3 +1,5 @@
+import os
+
 from flask import jsonify
 from app import graph
 
@@ -36,6 +38,14 @@ class Handler(object):
                 city=node.properties["city"]
             )
         return jsonify(error="No matching user: {0}".format(args["id"]))
+
+    @staticmethod
+    def get_nodes(child_type, parent_type, args):
+        kwargs = {}
+        if parent_type:
+            kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
+        data = graph.nodes.find_all(child_type, **kwargs)
+        return jsonify(nodes=data)
 
     @staticmethod
     def post_rank(args, node_type):

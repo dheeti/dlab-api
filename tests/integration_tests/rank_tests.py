@@ -11,8 +11,7 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
-from neo_utils import Handler, User, Node
-
+from shared.neo_utils import Handler, User, Node
 
 
 class RankTest(unittest.TestCase):

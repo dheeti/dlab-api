@@ -10,8 +10,8 @@ import py2neo
 root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
-from neo_utils import Handler, User, Node
 from app import app, graph
+from shared.neo_utils import Handler, User, Node
 
 
 class NodeTest(unittest.TestCase):
