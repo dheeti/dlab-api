@@ -12,6 +12,45 @@
 + Retrieve all nodes of a certain type *(GET)*  **NOT IMPLEMENTED**
 
 
+**Create User**
+----
+  Create a new user
+
+* **Method:**
+  
+  `POST`
+
+* **URL**
+
+  + `/api/user`
+
+* **Data Params**
+
+  ```
+  {
+    username:   [string],   // must be unique
+    name:       [string],   // display name
+    city:       [string]
+  }
+  ```
+  
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+
+    ```
+    {
+      success:  [boolean],
+      error:    [string]     // present if success == False
+    }
+    ```
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
 **Retrieve a Node**
 ----
   Retrieve data for a specific node.
@@ -65,10 +104,10 @@
 
   ```
   {
-      user_id: [integer],
-      node_id: [integer],   // must be valid `Value|Objective|Policy|Issue` node
-      issue_id: [integer],  // not required if node to be ranked is of type `Issue` 
-      rank: [integer]
+    user_id:    [integer],
+    node_id:    [integer],  // must be valid `Value|Objective|Policy|Issue` node
+    issue_id:   [integer],  // not required if node to be ranked is of type `Issue` 
+    rank:       [integer]
   }
   ```
   
@@ -76,13 +115,14 @@
 
   * **Code:** 200 OK <br />
     **Content:**
-      ```
-      {
-        success: [boolean],
-        error: [string]     // present if success == False
-      }
-      ```
- 
+    
+    ```
+    {
+      success:  [boolean],
+      error:    [string]    // present if success == False
+    }
+    ```
+
 * **Error Response:**
 
   * **Code:** 422 UNPROCESSABLE ENTITY <br />
@@ -106,10 +146,10 @@
 
   ```
   {
-      user_id: [string],
-      src_id: [string],
-      dst_id: [string],
-      strength: [integer]
+    user_id:    [string],
+    src_id:     [string],
+    dst_id:     [string],
+    strength:   [integer]
   }
   ```
   
@@ -117,12 +157,13 @@
 
   * **Code:** 200 OK <br />
     **Content:**
-      ```
-      {
-        success: [boolean],
-        error: [string]     // present if success == False
-      }
-      ```
+
+    ```
+    {
+      success:  [boolean],
+      error:    [string]    // present if success == False
+    }
+    ```
  
 * **Error Response:**
 
