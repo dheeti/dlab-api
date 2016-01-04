@@ -62,6 +62,7 @@ create a new user
 def post_user(args):
     return Handler.post_user(args)
 
+
 """
 apply a mapping between nodes
 Value -> Objective || Objective -> Policy
