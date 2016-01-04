@@ -35,10 +35,7 @@ class CreateNewUserTest(UserTest):
         
         # confirm JSON response matches what we expect
         response = json.loads(rv.data)
-        expected = dict(
-            node_id=self.user_id,
-            success="User <{0}> created".format(self.user_id)
-        )
+        expected = dict(success=True, error="")
         self.assertEqual(response, expected)
         
         # query graph directly and verify node exists
@@ -58,7 +55,7 @@ class CreateExistingUserTest(UserTest):
         # confirm JSON response matches what we expect
         response = json.loads(rv.data)
         expected = dict(
-            node_id=self.user_id,
+            success=False,
             error="User <{0}> already exists".format(self.user_id)
         )
         self.assertEqual(response, expected)

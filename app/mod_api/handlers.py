@@ -51,20 +51,12 @@ class Handler(object):
         user = args["username"]
         node, new_user = graph.create_user(args)
         if new_user:
-            return jsonify(
-                success="User <{0}> created".format(user),
-                node_id=user
-            )
+            return jsonify(success=True, error="")
         else:
-            return jsonify(
-                error="User <{0}> already exists".format(user),
-                node_id=user
-            )
+            error="User <{0}> already exists".format(user)
+            return jsonify(success=False, error=error)
     
     @staticmethod
     def post_map(args, src_node, dst_node):
         success, error = graph.user_map(args, src_node, dst_node)
-        return jsonify(
-            success=success,
-            error=error
-        )
+        return jsonify(success=success, error=error)
