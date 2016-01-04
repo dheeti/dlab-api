@@ -65,8 +65,6 @@ class Handler(object):
     def post_map(args, src_node, dst_node):
         success, error = graph.user_map(args, src_node, dst_node)
         return jsonify(
-            success=False,
-            error=error,
-            src_id=args["src_id"],
-            dst_id=args["dst_id"]
+            success=success,
+            error=error
         )
