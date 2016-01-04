@@ -1,35 +1,39 @@
-# API PROPOSAL
+# API Endpoints
 
 [Template](https://gist.github.com/iros/3426278)
 
+
 **Basic Functionality**
 
-+ Retrieve single node *(GET)*
-+ Retrieve all nodes of a certain type (filterable) *(GET)*
++ Create a user *(POST)*
++ Retrieve a node *(GET)*
 + Rank a node as a user *(POST)*
 + Map a connection between two nodes *(POST)*
++ Retrieve all nodes of a certain type (filterable) *(GET)*  **NOT IMPLEMENTED*
 
-**Retrieve Entity Data**
+
+**Retrieve a Node**
 ----
-  Retrieve data associated with a specific `Value|Objective|Policy|Issue|Community` entity.
-  
-* **URL**
-
-  + `/value?id=integer`
-  + `/objective?id=integer`
-  + `/policy?id=integer`
-  + `/issue?id=integer`
-  + `/community?id=integer`
+  Retrieve data for a specific node.
 
 * **Method:**
   
   `GET`
   
+* **URL**
+
+  + `/api/user?id=string`
+  + `/api/issue?id=string`
+  + `/api/community?id=string`
+  + `/api/value?id=string`
+  + `/api/objective?id=string`
+  + `/api/policy?id=string`
+  
 *  **URL Params**
 
    **Required:**
  
-   `id=[integer]`
+   `id=[string]`
 
 * **Success Response:**
 
@@ -38,34 +42,117 @@
  
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "error message" }`
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
 
 
-
-
-**Retrieve All Data for an Entity type**
+**Rank an Entity**
 ----
-  Retrieve all entities of a specific type
-  `Values|Objectives|Policies|Issues|Communities)`.
-  
-* **URL**
-
-  + `/values`
-  + `/objectives?issue_id=integer`
-  + `/policies?issue_id=integer`
-  + `/issues?community_id=integer`
-  + `/communities`
+  Assign a rank as a user to a given entity `Issue|Value|Objective|Policy`.
 
 * **Method:**
   
-  `GET`
+  `POST`
+
+* **URL**
+
+  + `/api/rank/issue`
+  + `/api/rank/value`
+  + `/api/rank/objective`
+  + `/api/rank/policy` 
+
+* **Data Params**
+
+  ```
+  {
+      user_id: [integer],
+      node_id: [integer],   // must id of a valid `Value|Objective|Policy|Issue` node
+      issue_id: [integer],  // not required if node to be ranked is of type `Issue` 
+      rank: [integer]
+  }
+  ```
   
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+      ```
+      {
+        success: [boolean],
+        error: [string]     // present if success == False
+      }
+      ```
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
+
+**Map two Entities**
+----
+  Create a user map between two entities `Value->Objective|Objective->Policy`.
+
+* **Method:**
+  
+  `POST`
+
+* **URL**
+
+  + `/api/map/value/objective`
+  + `/api/map/objective/policy`
+
+* **Data Params**
+
+  ```
+  {
+      user_id: [string],
+      src_id: [string],
+      dest_id: [string],
+      strength: [integer]
+  }
+  ```
+  
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+      ```
+      {
+        success: [boolean],
+        error: [string]     // present if success == False
+      }
+      ```
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
+
+# TO IMPLEMENT
+
+**Retrieve All Data for an Entity type**
+----
+  Retrieve all entities of a specific type for `Values|Objectives|Policies|Issues|Communities`.
+  
+* **Method:**
+  
+  `GET`  
+  
+* **URL**
+
+  + `/api/values`
+  + `/api/objectives?issue_id=integer`
+  + `/api/policies?issue_id=integer`
+  + `/api/issues?community_id=integer`
+  + `/api/communities`
+
 *  **URL Params**
 
    **Required:**
-    + For `/objectives` or `/policies` requests `issue_id=[integer]` param is required
-    + For `/issues` requests `community_id=[integer]` param is required
+    + For `objectives` or `policies` requests `issue_id=[integer]` param is required
+    + For `issues` requests `community_id=[integer]` param is required
 
 * **Success Response:**
 
@@ -74,82 +161,5 @@
  
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "error message" }`
-    
-
-
-
-**Rank an Entity**
-----
-  Assign a user rank to an entity `Value|Objective|Policy|Issue`.
-  
-* **URL**
-
-  + `/rank`
-
-* **Method:**
-  
-  `POST`
-  
-* **Data Params**
-
-  ```
-  {
-      user_id: [integer],
-      issue_id: [integer],
-      entity_id: [integer], // can be `Value|Objective|Policy|Issue` entity
-      rank: [integer]
-  }
-  ```
-  
-* **Success Response:**
-
-  * **Code:** 200 OK <br />
-    **Content:** `{ }`
- 
-* **Error Response:**
-
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "error message" }`
-
-
-
-
-**Map two Entities**
-----
-  Create a user map between two entities `Value->Objective|Objective->Policy`.
-  
-* **URL**
-
-  + `/map`
-
-* **Method:**
-  
-  `POST`
-  
-* **Data Params**
-
-  ```
-  {
-      user_id: [integer],
-      issue_id: [integer],
-      type: [1|2],  // 1 == Value -> Objective, 2 == Objective -> Policy
-      src_id: [integer],
-      dest_id: [integer]
-  }
-  ```
-  
-* **Success Response:**
-
-  * **Code:** 200 OK <br />
-    **Content:** `{ }`
- 
-* **Error Response:**
-
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "error message" }`
-
-
-
-
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
