@@ -4,12 +4,32 @@ from webargs import fields
 class Args(object):
     
     """
-    GET /api/<node>
+    GET /api/user
+    GET /api/issue
+    GET /api/value
+    GET /api/objective/policy
 
     node in user, community, issue, value, objective, policy
     """
     get_node = {
         'id':fields.Str(required=True),
+    }
+    
+    """
+    GET /api/community/issue
+    GET /api/issue/value
+    GET /api/issue/objective
+    GET /api/issue/policy
+    """
+    get_nodes = {
+        'filter_id':fields.Str(required=True)
+    }
+   
+    """
+    GET /api/community
+    """
+    get_community = {
+        'id':fields.Str(required=False),
     }
 
     """

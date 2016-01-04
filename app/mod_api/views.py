@@ -1,4 +1,5 @@
 import os
+from os.path import basename, dirname
 
 from flask import Blueprint, request, jsonify
 from webargs.flaskparser import use_args
@@ -30,15 +31,41 @@ def api_index():
 retrieve data about a node as specified by it's node_id
 """
 @mod_api.route('/user', methods=['GET'])
-@mod_api.route('/community', methods=['GET'])
 @mod_api.route('/issue', methods=['GET'])
 @mod_api.route('/value', methods=['GET'])
 @mod_api.route('/objective', methods=['GET'])
 @mod_api.route('/policy', methods=['GET'])
 @use_args(Args.get_node)
 def get_node(args):
-    node = os.path.basename(request.path).capitalize()
+    node = basename(request.path).capitalize()
     return Handler.get_node(args, node) 
+
+
+"""
+retrieve data about a node as specified by it's node_id
+"""
+@mod_api.route('/community', methods=['GET'])
+@use_args(Args.get_community)
+def get_community(args):
+    node = basename(request.path).capitalize()
+    if "id" in args:
+        return Handler.get_node(args, node) 
+    else:
+        return Handler.get_nodes(node, None, args) 
+
+
+"""
+retrieve all nodes of a given type
+"""
+@mod_api.route('/community/issue', methods=['GET'])
+@mod_api.route('/issue/value', methods=['GET'])
+@mod_api.route('/issue/objective', methods=['GET'])
+@mod_api.route('/issue/policy', methods=['GET'])
+@use_args(Args.get_nodes)
+def get_nodes(args):
+    parent = basename(dirname(request.path)).capitalize()
+    child = basename(request.path).capitalize()
+    return Handler.get_nodes(child, parent, args) 
 
 
 """
