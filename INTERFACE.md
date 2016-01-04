@@ -9,7 +9,7 @@
 + Retrieve a node *(GET)*
 + Rank a node as a user *(POST)*
 + Map a connection between two nodes *(POST)*
-+ Retrieve all nodes of a certain type (filterable) *(GET)*  **NOT IMPLEMENTED*
++ Retrieve all nodes of a certain type *(GET)*  **NOT IMPLEMENTED**
 
 
 **Retrieve a Node**
@@ -48,7 +48,7 @@
 
 **Rank an Entity**
 ----
-  Assign a rank as a user to a given entity `Issue|Value|Objective|Policy`.
+  Assign rank as user to a given entity `Issue|Value|Objective|Policy`.
 
 * **Method:**
   
@@ -66,7 +66,7 @@
   ```
   {
       user_id: [integer],
-      node_id: [integer],   // must id of a valid `Value|Objective|Policy|Issue` node
+      node_id: [integer],   // must be valid `Value|Objective|Policy|Issue` node
       issue_id: [integer],  // not required if node to be ranked is of type `Issue` 
       rank: [integer]
   }
@@ -108,7 +108,7 @@
   {
       user_id: [string],
       src_id: [string],
-      dest_id: [string],
+      dst_id: [string],
       strength: [integer]
   }
   ```
