@@ -44,13 +44,13 @@ def get_node(args):
 """
 apply a ranking to a specific node as a user
 """
-@mod_api.route('/issue/rank', methods=["POST"])
-@mod_api.route('/value/rank', methods=["POST"])
-@mod_api.route('/objective/rank', methods=["POST"])
-@mod_api.route('/policy/rank', methods=["POST"])
+@mod_api.route('/rank/issue', methods=["POST"])
+@mod_api.route('/rank/value', methods=["POST"])
+@mod_api.route('/rank/objective', methods=["POST"])
+@mod_api.route('/rank/policy', methods=["POST"])
 @use_args(Args.post_rank)
 def post_rank(args):
-    node = os.path.basename(os.path.dirname(request.path)).capitalize()
+    node = os.path.basename(request.path).capitalize()
     return Handler.post_rank(args, node)
 
 
@@ -61,3 +61,16 @@ create a new user
 @use_args(Args.post_user)
 def post_user(args):
     return Handler.post_user(args)
+
+
+"""
+apply a mapping between nodes
+Value -> Objective || Objective -> Policy
+"""
+@mod_api.route('/map/value/objective', methods=["POST"])
+@mod_api.route('/map/objective/policy', methods=["POST"])
+@use_args(Args.post_map)
+def post_map(args):
+    src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
+    dst_node = os.path.basename(request.path).capitalize()
+    return Handler.post_map(args, src_node, dst_node)

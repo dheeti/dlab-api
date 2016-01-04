@@ -12,7 +12,7 @@ sys.path.append(root)
 from app import app, graph
 
  
-class BasicTest(unittest.TestCase):
+class IndexTests(unittest.TestCase):
     
     def setUp(self):
         self.app = app.test_client()
@@ -29,6 +29,7 @@ class BasicTest(unittest.TestCase):
         expected = dict(response="API Index")
         response = json.loads(rv.data)
         self.assertEqual(response, expected)
+
 
 
 if __name__ == '__main__':

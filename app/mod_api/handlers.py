@@ -17,7 +17,7 @@ class Handler(object):
         if node_type == "User": return Handler._get_user(args)
        
         # lookup node and build json response
-        node = graph.find_node(node_type, args["id"])
+        node = graph.nodes.find(node_type, args["id"])
         if node:
             return jsonify(
                 name=node.properties["name"],
@@ -28,7 +28,7 @@ class Handler(object):
     @staticmethod
     def _get_user(args):
         # lookup user node and build json response
-        node = graph.find_node("User", args["id"])
+        node = graph.nodes.find("User", args["id"])
         if node:
             return jsonify(
                 id=node.properties["node_id"],
@@ -40,7 +40,7 @@ class Handler(object):
     @staticmethod
     def post_rank(args, node_type):
         # apply ranking to node and return success status
-        success, error = graph.rank(args, node_type)
+        success, error = graph.user_rank(args, node_type)
         if success:
             return jsonify(success=success)
         return jsonify(success=success, error=error)
@@ -51,12 +51,12 @@ class Handler(object):
         user = args["username"]
         node, new_user = graph.create_user(args)
         if new_user:
-            return jsonify(
-                success="User <{0}> created".format(user),
-                node_id=user
-            )
+            return jsonify(success=True, error="")
         else:
-            return jsonify(
-                error="User <{0}> already exists".format(user),
-                node_id=user
-            )
+            error="User <{0}> already exists".format(user)
+            return jsonify(success=False, error=error)
+    
+    @staticmethod
+    def post_map(args, src_node, dst_node):
+        success, error = graph.user_map(args, src_node, dst_node)
+        return jsonify(success=success, error=error)
