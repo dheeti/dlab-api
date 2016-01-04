@@ -16,7 +16,8 @@ neo_uri = os.getenv("NEO4J_URI", "")
 if not neo_uri: neo_uri = app.config["NEO4J_URI"]
 graph = Graph(neo_uri)
 
-from app import views
+from app.utils import crossdomain
 
+from app import views
 from app.mod_api.views import mod_api as api_module
 app.register_blueprint(api_module)
