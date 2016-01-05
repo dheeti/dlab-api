@@ -14,7 +14,7 @@
 
 **Create User**
 ----
-  Create a new user
+  Create a new user (NOTE: not secure unless over https)
 
 * **Method:**
   
@@ -29,6 +29,7 @@
   ```
   {
     username:   [string],   // must be unique
+    password:   [string],
     name:       [string],   // display name
     city:       [string]
   }
