@@ -6,6 +6,9 @@
 **Basic Functionality**
 
 + Create a user *(POST)*
+    + NOTE: not secure using http
++ Authenticate a user *(POST)*
+    + NOTE: not secure using http
 + Retrieve a node *(GET)*
 + Retrieve all nodes of a given type *(GET)*
 + Rank a node as a user *(POST)*
@@ -51,6 +54,46 @@
 
   * **Code:** 422 UNPROCESSABLE ENTITY <br />
     **Cause:** Invalid request parameters
+
+
+**Authenticate User**
+----
+  Send username/password credentials to authenticate a user.
+
+* **Method:**
+  
+  `POST`
+
+* **URL**
+
+  + `/api/login`
+
+* **Data Params**
+
+  ```
+  {
+    username:    [string],
+    password:    [string]
+  }
+  ```
+  
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+    
+    ```
+    {
+      success:  [boolean],  // True or False depending on if user is authenticated
+      error:    [string]    // present if success == False
+    }
+    ```
+
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
 
 **Retrieve a Node**
 ----
