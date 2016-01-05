@@ -30,13 +30,13 @@ def api_index():
 """
 retrieve data about a node as specified by it's node_id
 """
-@crossdomain(origin="*")
 @mod_api.route('/user', methods=['GET'])
 @mod_api.route('/issue', methods=['GET'])
 @mod_api.route('/value', methods=['GET'])
 @mod_api.route('/objective', methods=['GET'])
 @mod_api.route('/policy', methods=['GET'])
 @use_args(Args.get_node)
+@crossdomain(origin="*")
 def get_node(args):
     node = basename(request.path).capitalize()
     return Handler.get_node(args, node) 
