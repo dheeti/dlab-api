@@ -23,10 +23,45 @@ def handle_bad_request(err):
     return jsonify({"error": message }), 422
 
 
+"""
+api index
+"""
 @mod_api.route('/')
 @crossdomain(origin="*")
 def api_index():
     return Handler.index()
+
+
+"""
+create a new user
+"""
+@mod_api.route('/user', methods=["POST"])
+@use_args(Args.post_user)
+@crossdomain(origin="*")
+def post_user(args):
+    return Handler.post_user(args)
+
+
+"""
+login to create session cookie
+"""
+@mod_api.route('/login', methods=["POST"])
+@use_args(Args.post_login)
+@crossdomain(origin="*")
+def login(args):
+    success, error = Authenticate.login(graph, session, args)
+    return jsonify(success=success, error=error)
+
+
+"""
+logout to remove session cookie
+"""
+@mod_api.route('/logout', methods=["POST"])
+@use_args(Args.post_logout)
+@crossdomain(origin="*")
+def logout(args):
+    success, error = Authenticate.logout(session)
+    return jsonify(success=success, error=error)
 
 
 """
@@ -88,40 +123,6 @@ def post_rank(args):
 
 
 """
-create a new user
-"""
-@mod_api.route('/user', methods=["POST"])
-@use_args(Args.post_user)
-@crossdomain(origin="*")
-def post_user(args):
-    return Handler.post_user(args)
-
-
-"""
-login to create session cookie
-
-need to authenticate against something
-"""
-@mod_api.route('/login', methods=["POST"])
-@use_args(Args.post_login)
-@crossdomain(origin="*")
-def login(args):
-    success, error = Authenticate.login(graph, session, args)
-    return jsonify(success=success, error=error)
-
-
-"""
-logout to remove session cookie
-"""
-@mod_api.route('/logout', methods=["POST"])
-@use_args(Args.post_logout)
-@crossdomain(origin="*")
-def logout(args):
-    success, error = Authenticate.logout(session)
-    return jsonify(success=success, error=error)
-
-
-"""
 apply a mapping between nodes
 Value -> Objective || Objective -> Policy
 """
@@ -133,13 +134,3 @@ def post_map(args):
     src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
     dst_node = os.path.basename(request.path).capitalize()
     return Handler.post_map(args, src_node, dst_node)
-
-"""
-@app.route('/')
-@crossdomain(origin="*")
-def index():
-    if 'session_id' in session:
-        return 'Logged in as %s' % escape(session['session_id'])
-    return "ROOT API"
-
-"""
