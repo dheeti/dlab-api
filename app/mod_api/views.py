@@ -1,7 +1,7 @@
 import os
 from os.path import basename, dirname
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from webargs.flaskparser import use_args
 
 from app import graph, crossdomain
@@ -95,6 +95,13 @@ create a new user
 def post_user(args):
     return Handler.post_user(args)
 
+@mod_api.app.route('/login', methods=["POST"])
+@use_args(Args.post_login)
+@crossdomain(origin="*")
+def login():
+    session['session_id'] = "jeff"
+    return response
+
 
 """
 apply a mapping between nodes
@@ -108,3 +115,13 @@ def post_map(args):
     src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
     dst_node = os.path.basename(request.path).capitalize()
     return Handler.post_map(args, src_node, dst_node)
+
+"""
+@app.route('/')
+@crossdomain(origin="*")
+def index():
+    if 'session_id' in session:
+        return 'Logged in as %s' % escape(session['session_id'])
+    return "ROOT API"
+
+"""

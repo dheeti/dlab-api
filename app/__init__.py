@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.debug = True
 
+app.secret_key = os.getenv("SESSION_KEY", "this_should_be_random")
 
 # check if neo4j uri has been set as environment variable
 # otherwise use uri from config file
