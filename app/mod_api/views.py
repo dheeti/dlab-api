@@ -4,7 +4,7 @@ from os.path import basename, dirname
 from flask import Blueprint, request, jsonify
 from webargs.flaskparser import use_args
 
-from app import graph
+from app import graph, crossdomain
 from handlers import Handler
 from args import Args
 
@@ -30,6 +30,7 @@ def api_index():
 """
 retrieve data about a node as specified by it's node_id
 """
+@crossdomain(origin="*")
 @mod_api.route('/user', methods=['GET'])
 @mod_api.route('/issue', methods=['GET'])
 @mod_api.route('/value', methods=['GET'])
