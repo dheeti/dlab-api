@@ -1,6 +1,8 @@
 from py2neo import Graph as NeoGraph, Node, Relationship
 
 
+from mod_api.auth import Authenticate
+
 class Nodes(object):
 
     def __init__(self, graph):
@@ -17,7 +19,6 @@ class Nodes(object):
                 return [ link.end_node.properties for link in parent.match() ]
         else:
             return [ node.properties for node in self.graph.find(label) ]
-
 
     def create(self, node_type, properties):
         node = Node(node_type, **properties)
@@ -67,10 +68,12 @@ class Graph(object):
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
         if not node:
+            passhash = Authenticate.hashgen(args["username"], args["password"])
             properties = dict(
                 node_id=args["username"],
                 name=args["name"],
-                city=args["city"]
+                city=args["city"],
+                passhash=passhash
             )
             node = Node("User", **properties)
             self.graph.create(node)
