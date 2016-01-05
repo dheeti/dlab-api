@@ -12,6 +12,7 @@ sys.path.append(root)
 
 from app import app, graph
 
+PASSWORD = "password"
 
 class Handler(object):
 
@@ -47,7 +48,12 @@ class User(object):
         self.node_type = "User"
         self.node_id = str(uuid.uuid4())
         self.name = "{0}-{1}".format("User", self.node_id)
-        self.data = dict(username=self.node_id, name="TestUser", city="Portland")
+        self.data = dict(
+            username=self.node_id,
+            password=PASSWORD,
+            name="TestUser",
+            city="Portland"
+        )
         self.node, self.success = graph.create_user(self.data)
         if self.success: handler.add_node(self.node)
 
