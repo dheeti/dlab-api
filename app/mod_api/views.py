@@ -9,7 +9,9 @@ from handlers import Handler
 from auth import Authenticate
 from args import Args
 
+
 mod_api = Blueprint('api', __name__, url_prefix='/api')
+
 
 """
 default error handler when request arguments do not match required arguments
@@ -43,24 +45,13 @@ def post_user(args):
 
 
 """
-login to create session cookie
+authenticate user
 """
 @mod_api.route('/login', methods=["POST"])
 @use_args(Args.post_login)
 @crossdomain(origin="*")
 def login(args):
     success, error = Authenticate.login(graph, session, args)
-    return jsonify(success=success, error=error)
-
-
-"""
-logout to remove session cookie
-"""
-@mod_api.route('/logout', methods=["POST"])
-@use_args(Args.post_logout)
-@crossdomain(origin="*")
-def logout(args):
-    success, error = Authenticate.logout(session)
     return jsonify(success=success, error=error)
 
 
