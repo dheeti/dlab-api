@@ -37,10 +37,26 @@ class Args(object):
     """
     post_user = {
         'username':fields.Str(required=True),
+        'password':fields.Str(required=True),
         'name':fields.Str(required=True),
         'city':fields.Str(required=True)
     }
     
+    """
+    POST /api/login
+    """
+    post_login = {
+        'username':fields.Str(required=True),
+        'password':fields.Str(required=True)
+    }
+    
+    """
+    POST /api/logout
+    """
+    post_logout = {
+        'username':fields.Str(required=True)
+    }
+  
     """
     POST /api/rank/<node>
     

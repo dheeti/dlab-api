@@ -12,6 +12,7 @@ sys.path.append(root)
 
 from app import app, graph
 
+PASSWORD = "password"
 
 class UserTest(unittest.TestCase):
     
@@ -19,7 +20,12 @@ class UserTest(unittest.TestCase):
         self.app = app.test_client()
         self.user_id = "testuser-{0}".format(uuid.uuid4())
         self.endpoint = "/api/user"
-        self.data = dict(username=self.user_id, name="Test", city="Portland")
+        self.data = dict(
+            username=self.user_id,
+            name="Test",
+            city="Portland",
+            password="password"
+        )
 
     def tearDown(self):
         graph.nodes.delete("User", self.user_id)
