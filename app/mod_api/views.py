@@ -23,6 +23,7 @@ def handle_bad_request(err):
 
 
 @mod_api.route('/')
+@crossdomain(origin="*")
 def api_index():
     return Handler.index()
 
@@ -47,6 +48,7 @@ retrieve data about a node as specified by it's node_id
 """
 @mod_api.route('/community', methods=['GET'])
 @use_args(Args.get_community)
+@crossdomain(origin="*")
 def get_community(args):
     node = basename(request.path).capitalize()
     if "id" in args:
@@ -63,6 +65,7 @@ retrieve all nodes of a given type
 @mod_api.route('/issue/objective', methods=['GET'])
 @mod_api.route('/issue/policy', methods=['GET'])
 @use_args(Args.get_nodes)
+@crossdomain(origin="*")
 def get_nodes(args):
     parent = basename(dirname(request.path)).capitalize()
     child = basename(request.path).capitalize()
@@ -77,6 +80,7 @@ apply a ranking to a specific node as a user
 @mod_api.route('/rank/objective', methods=["POST"])
 @mod_api.route('/rank/policy', methods=["POST"])
 @use_args(Args.post_rank)
+@crossdomain(origin="*")
 def post_rank(args):
     node = os.path.basename(request.path).capitalize()
     return Handler.post_rank(args, node)
@@ -87,6 +91,7 @@ create a new user
 """
 @mod_api.route('/user', methods=["POST"])
 @use_args(Args.post_user)
+@crossdomain(origin="*")
 def post_user(args):
     return Handler.post_user(args)
 
@@ -98,6 +103,7 @@ Value -> Objective || Objective -> Policy
 @mod_api.route('/map/value/objective', methods=["POST"])
 @mod_api.route('/map/objective/policy', methods=["POST"])
 @use_args(Args.post_map)
+@crossdomain(origin="*")
 def post_map(args):
     src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
     dst_node = os.path.basename(request.path).capitalize()
