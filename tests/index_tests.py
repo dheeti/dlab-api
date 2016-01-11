@@ -23,9 +23,7 @@ class IndexTests(unittest.TestCase):
         self.assertEqual(rv.data, expected)
 
     def test_api_index(self):
-        # trailing '/' is required when testing because
-        # flask is weird and returns 301 otherwise
-        rv = self.app.get('/api/') 
+        rv = self.app.get('/api') 
         expected = dict(response="API Index")
         response = json.loads(rv.data)
         self.assertEqual(response, expected)
