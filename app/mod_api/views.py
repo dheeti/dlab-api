@@ -28,7 +28,8 @@ def handle_bad_request(err):
 """
 api index
 """
-@mod_api.route('/')
+
+@mod_api.route('')
 @crossdomain(origin="*")
 def api_index():
     return Handler.index()
