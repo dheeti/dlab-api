@@ -1,8 +1,7 @@
 from flask import Blueprint, request
 
-from app import app, crossdomain
+from app import app
 
 @app.route('/')
-@crossdomain(origin="*")
 def index():
     return "ROOT API"

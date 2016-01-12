@@ -1,13 +1,15 @@
 import os, sys
 
 from flask import Flask
-
+from flask.ext.cors import CORS
 from graph import Graph
 
 
 app = Flask(__name__)
 app.config.from_object('config')
 app.debug = True
+
+CORS(app)
 
 # check if neo4j uri has been set as environment variable
 # otherwise use uri from config file
