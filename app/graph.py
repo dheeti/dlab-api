@@ -1,7 +1,7 @@
 from py2neo import Graph as NeoGraph, Node, Relationship
 
-
 from mod_api.auth import Authenticate
+
 
 class Nodes(object):
 
