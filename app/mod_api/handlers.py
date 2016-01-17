@@ -1,7 +1,9 @@
 import os
 
-from flask import jsonify
+from flask import jsonify, session
+
 from app import graph
+from auth import Authenticate
 
 
 class Handler(object):
@@ -12,6 +14,11 @@ class Handler(object):
     @staticmethod
     def index():
         return jsonify(response="API Index")
+
+    @staticmethod
+    def post_login(args):
+        success, error = Authenticate.login(graph, session, args)
+        return jsonify(success=success, error=error)
 
     @staticmethod
     def get_node(args, node_type):

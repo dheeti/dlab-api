@@ -1,13 +1,43 @@
 import os
 from os.path import basename, dirname
 
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from webargs.flaskparser import use_args
 
 from app import graph
 from handlers import Handler
-from auth import Authenticate
 from args import Args
+
+
+"""
+This file contains all of the routes our api can process. When a HTTP request
+is made that mades one of our routes, that request will be passed to the function
+registered to handle it. A HTTP response will be constructed and sent
+back to the client.
+
+The process for handling most requests is:
+
+1. Parse parameters from request. For this we are using the webargs package.
+It allows you to define the required and optional parameters in a dictionary
+which is used to validate the request that all the required fields are present.
+
+    + See `/app/mod_api/args.py`
+    + Args definition is passed to function with `@use_args` decorator and
+    then passed to handling function as an argument
+
+2. Pass the request arguments to it's appropriate Handler. The Handler is responsible
+for interacting with the graph to retrieve the requested data or update the state
+of the system. All Handler methods will return a json response object that is sent
+to the client.
+
+    + See `/app/mod_api/handlers.py`
+    + Most of the heavy lifting for the database is done using a graph
+    convenience object. That provides wrappers for executing multi-stage
+    queries in one call, as well as basic methods to fetch a single node
+    or relationship. All direct database access should originate from that file.
+    + See `/app/graph.py`
+
+"""
 
 
 mod_api = Blueprint('api', __name__, url_prefix='/api')
@@ -47,9 +77,8 @@ authenticate user
 """
 @mod_api.route('/login', methods=["POST"])
 @use_args(Args.post_login)
-def login(args):
-    success, error = Authenticate.login(graph, session, args)
-    return jsonify(success=success, error=error)
+def post_login(args):
+    return Handler.post_login(args)
 
 
 """
