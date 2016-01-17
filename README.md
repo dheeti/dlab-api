@@ -11,7 +11,11 @@ it as a system environment variable.
 The `NEO4J_URI` string for accessing capstone's instance can be found
 on the **Servers** Trello board on *Neo4j* -> *NEO4J_URI*.
 
-```
+
+NOTE: These instructions are for Linux. There will be differences
+if you are using Mac or Windows.
+
+```bash
 # create python virtual environment and fetch dependencies
 ./setup.sh
 
