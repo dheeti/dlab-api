@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import os
 from os.path import basename, dirname
 
@@ -5,8 +6,8 @@ from flask import Blueprint, request, jsonify
 from webargs.flaskparser import use_args
 
 from app import graph
-from handlers import Handler
-from args import Args
+from app.mod_api.handlers import Handler
+from app.mod_api.args import Args
 
 
 """
