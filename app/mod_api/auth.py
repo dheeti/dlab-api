@@ -1,4 +1,5 @@
 import hashlib
+import six
 
 
 class Authenticate(object):
@@ -16,6 +17,12 @@ class Authenticate(object):
 
     @staticmethod
     def hashgen(username, password):
+        # sha256 can't take python 3.x strings as arguments
+        if not isinstance(username, six.binary_type):
+            username = username.encode('utf-8')
+        if not isinstance(password, six.binary_type):
+            password = password.encode('utf-8')
+
         salt = hashlib.sha256(username).hexdigest()
         auth_hash = hashlib.sha256(salt + password).hexdigest()
         return auth_hash
