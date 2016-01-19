@@ -24,5 +24,7 @@ class Authenticate(object):
             password = password.encode('utf-8')
 
         salt = hashlib.sha256(username).hexdigest()
+        if not isinstance(salt, six.binary_type):
+            salt = salt.encode('utf-8')
         auth_hash = hashlib.sha256(salt + password).hexdigest()
         return auth_hash

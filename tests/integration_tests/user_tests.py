@@ -1,6 +1,5 @@
 import sys
 from os.path import dirname, abspath
-import json
 import unittest
 import uuid
 
@@ -11,6 +10,8 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
+from shared import safe_json_loads
+
 
 PASSWORD = "password"
 
@@ -40,7 +41,7 @@ class CreateNewUserTest(UserTest):
         rv = self.app.post(self.endpoint, data=self.data)
         
         # confirm JSON response matches what we expect
-        response = json.loads(rv.data)
+        response = safe_json_loads(rv.data)
         expected = dict(success=True, error="")
         self.assertEqual(response, expected)
         
@@ -59,7 +60,7 @@ class CreateExistingUserTest(UserTest):
         rv = self.app.post(self.endpoint, data=self.data)
 
         # confirm JSON response matches what we expect
-        response = json.loads(rv.data)
+        response = safe_json_loads(rv.data)
         expected = dict(
             success=False,
             error="User <{0}> already exists".format(self.user_id)
@@ -76,7 +77,7 @@ class GetExistingUserTest(UserTest):
         rv = self.app.get("/api/user", data=dict(id=self.user_id))
         
         # confirm JSON response matches what we expect
-        response = json.loads(rv.data)
+        response = safe_json_loads(rv.data)
         expected = dict(
             id=self.data["username"],
             name=self.data["name"],
