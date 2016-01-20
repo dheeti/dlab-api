@@ -4,7 +4,6 @@ import json
 import unittest
 import uuid
 from random import randint
-import py2neo
 
 # add parent directory to path to allow importing app
 root = dirname(dirname(dirname(abspath(__file__))))
@@ -16,12 +15,13 @@ from shared.neo_utils import Handler, User, Node
 
 class RankTest(unittest.TestCase):
     
-    rank = randint(0,99)
+    rank = randint(0, 99)
            
     def setUp(self):
         self.app = app.test_client()
         self.handler = Handler()
         self.user = User(self.handler)
+        self.issue_id = str(uuid.uuid4())
     
     def tearDown(self):
         self.handler.clean_up()
@@ -31,7 +31,7 @@ class RankTest(unittest.TestCase):
             user_id=self.user.node_id,
             node_id=self.node.node_id,
             rank=self.rank,
-            issue_id=str(uuid.uuid4())
+            issue_id=self.issue_id,
         )
    
     def find_link(self):
@@ -157,7 +157,7 @@ class UpdateRankTest(RankTest):
         self.check_rank()
 
         # update
-        self.rank = randint(0,99)
+        self.rank = randint(0, 99)
         self.data = self.parameters()
         
         # re-rank
