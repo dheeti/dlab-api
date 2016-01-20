@@ -77,3 +77,10 @@ class Handler(object):
     def post_map(args, src_node, dst_node):
         success, error = graph.user_map(args, src_node, dst_node)
         return jsonify(success=success, error=error)
+
+    @staticmethod
+    def get_summary(args, node_type):
+        success, response = graph.get_summary(args["issue_id"], node_type)
+        if success:
+            return jsonify(success=success, data=response)
+        return jsonify(success=False, error=response)

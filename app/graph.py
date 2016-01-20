@@ -151,3 +151,27 @@ class Graph(object):
             self.graph.create(Relationship(user, "MAPS", map_node, **properties))
         
         return True, ""
+
+    def get_summary(self, issue_id, node_type):
+        issue = self.nodes.find("Issue", issue_id) 
+        if not issue:
+            return False, "issue <{0}> does not exist".format(issue_id)
+        
+        # TODO only grab nodes that are connected to issue node
+        cypher = self.graph.cypher
+        query = """
+            MATCH (u:User)-[r:RANKS]-(v:`{0}`)
+            RETURN
+                r.rank AS rank,
+                v.node_id AS node_id,
+                count(u.node_id) AS count
+            ORDER BY
+                node_id, rank
+        """.format(node_type)
+        results = cypher.execute(query)
+        nodes = {}
+        for row in results:
+            if row.node_id not in nodes:
+                nodes[row.node_id] = [0, 0, 0, 0, 0]
+            nodes[row.node_id][row.rank + 2] = row.count
+        return True, nodes

@@ -146,3 +146,15 @@ def post_map(args):
     src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
     dst_node = os.path.basename(request.path).capitalize()
     return Handler.post_map(args, src_node, dst_node)
+
+
+"""
+Generate summary for stacked bar chart visualization
+"""
+@mod_api.route('/summary/value', methods=['GET'])
+@mod_api.route('/summary/objective', methods=['GET'])
+@mod_api.route('/summary/policy', methods=['GET'])
+@use_args(Args.get_summary)
+def get_summary(args):
+    node_type = basename(request.path).capitalize()
+    return Handler.get_summary(args, node_type)
