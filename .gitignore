@@ -2,3 +2,6 @@ neoconf
 *.*swp
 *.pyc
 env
+
+# Pycharm IDE settings
+.idea
