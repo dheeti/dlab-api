@@ -270,11 +270,11 @@
 * **Success Response:**
 
   * **Code:** 200 OK <br />
-    **Content:** `{ [
+    **Content:** `{
         node_id : [ SD count, D count, N count, A count, SA count ],
         ...
         node_id : [ SD count, D count, N count, A count, SA count ]
-    ]}`
+    }`
  
 * **Error Response:**
 
