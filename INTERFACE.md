@@ -248,4 +248,37 @@
     **Cause:** Invalid request parameters
 
 
+**Generate summary for stacked bar chart visualization**
+----
+  Summarize ranking of likert responses of all users for a specific `Value|Objective|Policie` in context of an issue. 
+  
+* **Method:**
+  
+  `GET`  
+  
+* **URL**
+
+  + `/api/summary/value`
+  + `/api/summary/objective`
+  + `/api/summary/policy`
+
+*  **URL Params**
+
+   **Required:**
+   `issue_id=[string]`
+
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:** `{ [
+        node_id : [ SD count, D count, N count, A count, SA count ],
+        ...
+        node_id : [ SD count, D count, N count, A count, SA count ]
+    ]}`
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
 
