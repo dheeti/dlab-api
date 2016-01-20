@@ -16,7 +16,11 @@ class Nodes(object):
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
             if parent:
-                return [ link.end_node.properties for link in parent.match() ]
+                data = []
+                for link in parent.match():
+                    if label in link.end_node.labels:
+                        data.append(link.end_node.properties)
+                return data
         else:
             return [ node.properties for node in self.graph.find(label) ]
 

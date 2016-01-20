@@ -47,7 +47,7 @@ class NodesTest(unittest.TestCase):
         msg= "response nodes contain an invalid node_id"
         for node_id in [ node.node_id for node in self.children ]:
             self.assertIn(node_id, actual, msg=msg)
-   
+    
     def runner(self):
         rv = self.app.get(self.endpoint, data=self.data)
         self.check_status_code(rv.status_code)

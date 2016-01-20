@@ -52,6 +52,7 @@ class Handler(object):
         if parent_type:
             kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
         data = graph.nodes.find_all(child_type, **kwargs)
+        print data
         return jsonify(nodes=data)
 
     @staticmethod
