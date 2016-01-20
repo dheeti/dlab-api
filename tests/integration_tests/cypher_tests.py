@@ -6,6 +6,7 @@ import unittest
 root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
+
 from app import app, graph
 
 
@@ -16,13 +17,13 @@ class CypherRawTest(unittest.TestCase):
         query = """
             MATCH (u:User)-[r:RANKS]-(v:Value)
             RETURN
-                u.node_id AS username,
                 r.rank AS rank,
-                v.name AS name;
+                v.node_id AS node_id,
+                count(u.node_id) AS count;
         """
         results = cypher.execute(query)
-        for row in results:
-            print row.username, row.rank, row.name
+        #for row in results:
+        #    print row.rank, row.node_id, row.count
 
 
 if __name__ == '__main__':

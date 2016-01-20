@@ -79,3 +79,7 @@ class Args(object):
         'dst_id':fields.Str(required=True),
         'strength':fields.Int(required=True)
     }
+
+    get_summary = {
+        'issue_id':fields.Str(required=True)
+    }
