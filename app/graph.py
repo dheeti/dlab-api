@@ -159,7 +159,7 @@ class Graph(object):
     def get_summary(self, issue_id, node_type):
         issue = self.nodes.find("Issue", issue_id) 
         if not issue:
-            return False, "issue <{0}> does not exist".format(issue_id)
+            return False, "issue <{0}> does not exist".format(issue_id), []
         
         # TODO only grab nodes that are connected to issue node
         cypher = self.graph.cypher
@@ -173,12 +173,13 @@ class Graph(object):
                 node_id, rank
         """.format(node_type)
         results = cypher.execute(query)
-        nodes = dict(invalid=[])
-        for row in results:
+        nodes = {}
+        invalid = []
+	for row in results:
             if row.node_id not in nodes:
                 nodes[row.node_id] = [0, 0, 0, 0, 0]
             if row.rank in range(-2, 3):
                 nodes[row.node_id][row.rank + 2] = row.count
             else:
-                nodes["invalid"].append(row.rank)
-        return True, nodes
+                invalid.append(row.rank)
+        return True, nodes, invalid

@@ -80,7 +80,7 @@ class Handler(object):
 
     @staticmethod
     def get_summary(args, node_type):
-        success, response = graph.get_summary(args["issue_id"], node_type)
+        success, response, invalid = graph.get_summary(args["issue_id"], node_type)
         if success:
-            return jsonify(success=success, data=response)
+            return jsonify(success=success, data=response, invalid=invalid)
         return jsonify(success=False, error=response)
