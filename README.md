@@ -43,15 +43,16 @@ export NEO4J_URI=<uri access string>
 ### Windows
 
 ```bat
+:: create python virtual environment and fetch dependencies
 setup.bat
-:: open config.py and set NEO4J_URI to uri access string
+
+:: NOTE: modify `config.py` and set NEO4J_URI variable to correct uri access string
 
 :: run all tests
 env\Scripts\nosetests
 
 :: start local api server
 env\Scripts\python run.py
-
 ```
 
 You should now have the api server running at `127.0.0.1:9000`
