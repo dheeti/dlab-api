@@ -173,9 +173,12 @@ class Graph(object):
                 node_id, rank
         """.format(node_type)
         results = cypher.execute(query)
-        nodes = {}
+        nodes = dict(invalid=[])
         for row in results:
             if row.node_id not in nodes:
                 nodes[row.node_id] = [0, 0, 0, 0, 0]
-            nodes[row.node_id][row.rank + 2] = row.count
+            if row.rank in range(-2, 3):
+                nodes[row.node_id][row.rank + 2] = row.count
+            else:
+                nodes["invalid"].append(row.rank)
         return True, nodes
