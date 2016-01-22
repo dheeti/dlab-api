@@ -15,14 +15,28 @@ class Nodes(object):
     def find_all(self, label, **kwargs):
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
-            if parent:
-                data = []
-                for link in parent.match():
-                    if label in link.end_node.labels:
-                        data.append(link.end_node.properties)
-                return data
+        if parent:
+            data = []
+            for link in parent.match():
+                if label in link.end_node.labels:
+                    data.append(link.end_node.properties)
+            return data
         else:
             return [ node.properties for node in self.graph.find(label) ]
+
+
+    def find_all_withUserID(self, label, user_id,**kwargs):
+    # similar to find_all, but filter with a specific user_id
+        user = self.find("User",user_id)
+        parent = self.find(kwargs["parent_label"],kwargs["parent_id"])
+        data = []
+        for link in parent.match():
+            link_user = self.graph.match_one(start_node=user,end_node=link.end_node)
+            if link_user:
+                if label in link_user.end_node.labels:
+                    data.append(link.end_node.properties)
+        return data
+            
 
     def create(self, node_type, properties):
         node = Node(node_type, **properties)
