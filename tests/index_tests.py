@@ -8,10 +8,11 @@ import sys
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
 
+
 from app import app, graph
 
  
-class BasicTest(unittest.TestCase):
+class IndexTests(unittest.TestCase):
     
     def setUp(self):
         self.app = app.test_client()
@@ -22,9 +23,7 @@ class BasicTest(unittest.TestCase):
         self.assertEqual(rv.data, expected)
 
     def test_api_index(self):
-        # trailing '/' is required when testing because
-        # flask is weird and returns 301 otherwise
-        rv = self.app.get('/api/') 
+        rv = self.app.get('/api') 
         expected = dict(response="API Index")
         response = json.loads(rv.data)
         self.assertEqual(response, expected)
@@ -32,6 +31,3 @@ class BasicTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
