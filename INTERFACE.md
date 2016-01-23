@@ -271,9 +271,14 @@
 
   * **Code:** 200 OK <br />
     **Content:** `{
-        node_id : [ SD count, D count, N count, A count, SA count ],
-        ...
-        node_id : [ SD count, D count, N count, A count, SA count ]
+        success : True|False
+        invalid : [invalid rank, ... , invalid rank],    // any values not in likert scale
+        data : {
+            node_id : [ SD count, D count, N count, A count, SA count ],
+            ...
+            node_id : [ SD count, D count, N count, A count, SA count ]
+        }
+        error : "error message" // only present if success == False
     }`
  
 * **Error Response:**
