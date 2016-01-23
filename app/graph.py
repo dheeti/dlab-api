@@ -13,20 +13,27 @@ class Nodes(object):
         return self.graph.find_one(label, **args)
     
     def find_all(self, label, **kwargs):
+        """
+        Find all nodes in graph of a given `label` type
+
+        If `parent_label` and `parent_id` keyword params are present then only
+        return nodes of type `label` that are children of the referenced parent node,
+        otherwise return all nodes of type `label`
+        """
+        nodes = []
+        parent = None
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         if parent:
-            data = []
             for link in parent.match():
                 if label in link.end_node.labels:
-                    data.append(link.end_node.properties)
-            return data
+                    nodes.append(link.end_node.properties)
         else:
-            return [ node.properties for node in self.graph.find(label) ]
-
+            nodes = [ node.properties for node in self.graph.find(label) ]
+        return nodes
 
     def find_all_withUserID(self, label, user_id,**kwargs):
-    # similar to find_all, but filter with a specific user_id
+        # similar to find_all, but filter with a specific user_id
         user = self.find("User",user_id)
         parent = self.find(kwargs["parent_label"],kwargs["parent_id"])
         data = []
@@ -36,7 +43,6 @@ class Nodes(object):
                 if label in link_user.end_node.labels:
                     data.append(link.end_node.properties)
         return data
-            
 
     def create(self, node_type, properties):
         node = Node(node_type, **properties)
