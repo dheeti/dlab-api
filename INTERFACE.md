@@ -181,9 +181,9 @@
 
   ```
   {
-    user_id:    [integer],
-    node_id:    [integer],  // must be valid `Value|Objective|Policy|Issue` node
-    issue_id:   [integer],  // not required if node to be ranked is of type `Issue` 
+    user_id:    [string],
+    node_id:    [string],  // must be valid `Value|Objective|Policy|Issue` node
+    issue_id:   [string],  // not required if node to be ranked is of type `Issue` 
     rank:       [integer]
   }
   ```
