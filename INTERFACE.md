@@ -181,9 +181,9 @@
 
   ```
   {
-    user_id:    [integer],
-    node_id:    [integer],  // must be valid `Value|Objective|Policy|Issue` node
-    issue_id:   [integer],  // not required if node to be ranked is of type `Issue` 
+    user_id:    [string],
+    node_id:    [string],  // must be valid `Value|Objective|Policy|Issue` node
+    issue_id:   [string],  // not required if node to be ranked is of type `Issue` 
     rank:       [integer]
   }
   ```
@@ -270,7 +270,10 @@
 * **Success Response:**
 
   * **Code:** 200 OK <br />
-    **Content:** `{
+    **Content:** <br />
+    
+    ```
+    {
         success : True|False
         invalid : [invalid rank, ... , invalid rank],    // any values not in likert scale
         data : {
@@ -279,7 +282,8 @@
             node_id : [ SD count, D count, N count, A count, SA count ]
         }
         error : "error message" // only present if success == False
-    }`
+    }
+    ```
  
 * **Error Response:**
 

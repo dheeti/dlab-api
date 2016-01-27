@@ -1,6 +1,5 @@
 import sys
 from os.path import dirname, abspath
-import json
 import unittest
 import uuid
 
@@ -11,6 +10,7 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
+from shared import safe_json_loads
 from shared.neo_utils import Handler, User, Node, Link
 
 
@@ -42,7 +42,7 @@ class NodesTest(unittest.TestCase):
         self.assertEqual(code, 200, msg="status code not 200")
 
     def check_response(self, data):
-        response = json.loads(data)
+        response = safe_json_loads(data)
         actual = [ node["node_id"] for node in response["nodes"] ]
         msg= "response nodes contain an invalid node_id"
         for node_id in [ node.node_id for node in self.children ]:

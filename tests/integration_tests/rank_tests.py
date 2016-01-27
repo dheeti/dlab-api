@@ -1,6 +1,5 @@
 import sys
 from os.path import dirname, abspath
-import json
 import unittest
 import uuid
 from random import randint
@@ -10,6 +9,7 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
+from shared import safe_json_loads
 from shared.neo_utils import Handler, User, Node
 
 
@@ -42,13 +42,13 @@ class RankTest(unittest.TestCase):
     def check_rank(self):
         link = self.find_link()
         assert link, "failed to find link"
-        assert link.properties["rank"] == self.rank
+        self.assertEqual(link.properties["rank"], self.rank)
 
     def check_status_code(self, code):
         assert code == 200, "status code not 200"
 
     def check_response(self, expected, data):
-        response = json.loads(data)
+        response = safe_json_loads(data)
         error = "expecting: {0}, actual: {1}".format(expected, response)
         assert response == expected, error
 
