@@ -1,8 +1,9 @@
+from __future__ import absolute_import
 import os, sys
 
 from flask import Flask
 from flask.ext.cors import CORS
-from graph import Graph
+from app.graph import Graph
 
 
 app = Flask(__name__)

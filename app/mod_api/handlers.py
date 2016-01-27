@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 import os
 
 from flask import jsonify, session
 
 from app import graph
-from auth import Authenticate
+from app.mod_api.auth import Authenticate
 
 
 class Handler(object):
