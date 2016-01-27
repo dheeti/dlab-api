@@ -114,8 +114,7 @@ class Graph(object):
             return False, "invalid node_id"
 
         link = self.links.find(user, node, "RANKS")
-        if link and ("issue_id" not in args or
-                     link.properties["issue_id"] == args["issue_id"]):
+        if link:
             link.properties["rank"] = args["rank"]
             link.push()
         else:
