@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 from os.path import dirname, abspath
 import unittest
@@ -22,8 +23,8 @@ class CypherRawTest(unittest.TestCase):
                 count(u.node_id) AS count;
         """
         results = cypher.execute(query)
-        #for row in results:
-        #    print row.rank, row.node_id, row.count
+        # for row in results:
+        #     print(row.rank, row.node_id, row.count)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,5 @@
 import sys
 from os.path import dirname, abspath
-import json
 import unittest
 import uuid
 
@@ -11,6 +10,7 @@ root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
 from app import app, graph
+from shared import safe_json_loads
 from shared.neo_utils import Handler, User, Node
 
 
@@ -26,7 +26,7 @@ class NodeTest(unittest.TestCase):
     def runner(self):
         data = dict(id=self.node.node_id)
         rv = self.app.get(self.endpoint, data=data)
-        response = json.loads(rv.data)
+        response = safe_json_loads(rv.data)
         contains_id = set(data.items()).issubset(set(response.items()))
         self.assertTrue(contains_id, msg="response does not contain node id")
 

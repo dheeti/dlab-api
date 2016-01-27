@@ -1,6 +1,5 @@
 import sys
 from os.path import dirname, abspath
-import json
 import unittest
 import uuid
 from random import randint
@@ -12,6 +11,7 @@ sys.path.append(root)
 
 from app import app, graph
 from app.mod_api.auth import Authenticate
+from shared import safe_json_loads
 from shared.neo_utils import Handler, User, Node
 
 
@@ -41,7 +41,7 @@ class LoginTests(unittest.TestCase):
     def test_valid(self):
         rv = self.app.post(self.endpoint, data=self.parameters())
         self.check_status_code(rv.status_code)
-        self.assertTrue(json.loads(rv.data)["success"], msg="success not true")
+        self.assertTrue(safe_json_loads(rv.data)["success"], msg="success not true")
     
     def test_invalid_username(self):
         data = self.parameters()
@@ -49,7 +49,7 @@ class LoginTests(unittest.TestCase):
         rv = self.app.post(self.endpoint, data=data)
         self.check_status_code(rv.status_code)
         msg = "login should have failed, invalid username"
-        self.assertFalse(json.loads(rv.data)["success"], msg=msg)
+        self.assertFalse(safe_json_loads(rv.data)["success"], msg=msg)
 
     def test_invalid_password(self):
         data = self.parameters()
@@ -57,7 +57,7 @@ class LoginTests(unittest.TestCase):
         rv = self.app.post(self.endpoint, data=data)
         self.check_status_code(rv.status_code)
         msg = "login should have failed, invalid password"
-        self.assertFalse(json.loads(rv.data)["success"], msg=msg)
+        self.assertFalse(safe_json_loads(rv.data)["success"], msg=msg)
 
 
 if __name__ == '__main__':
