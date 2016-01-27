@@ -22,7 +22,8 @@ class Args(object):
     GET /api/issue/policy
     """
     get_nodes = {
-        'filter_id':fields.Str(required=True)
+        'filter_id':fields.Str(required=True),
+        'user_id':fields.Str(required=False)
     }
    
     """
