@@ -50,8 +50,12 @@ class Handler(object):
     def get_nodes(child_type, parent_type, args):
         kwargs = {}
         if parent_type:
-            kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
-        data = graph.nodes.find_all(child_type, **kwargs)
+            if "user_id" in args:
+                kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"], user_id=args["user_id"])
+                data = graph.nodes.find_all_withUserID(child_type, **kwargs)
+            else:
+                kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
+                data = graph.nodes.find_all(child_type, **kwargs)
         return jsonify(nodes=data)
 
     @staticmethod
@@ -80,7 +84,7 @@ class Handler(object):
 
     @staticmethod
     def get_summary(args, node_type):
-        success, response = graph.get_summary(args["issue_id"], node_type)
+        success, response, invalid = graph.get_summary(args["issue_id"], node_type)
         if success:
-            return jsonify(success=success, data=response)
+            return jsonify(success=success, data=response, invalid=invalid)
         return jsonify(success=False, error=response)
