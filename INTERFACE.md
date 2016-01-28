@@ -140,15 +140,19 @@
 * **URL**
 
   + `/api/communnity`
-  + `/api/community/issue?filter_id=string` *filter_id* must be valid **Community** node id
-  + `/api/issue/value?filter_id=string` *filter_id* must be valid **Issue** node id
-  + `/api/issue/objective?filter_id=string` *filter_id* must be valid **Issue** node id
-  + `/api/issue/policy?filter_id=string` *filter_id* must be valid **Issue** node id
+  + `/api/community/issue?filter_id=string` `filter_id` must be valid **Community** node id
+  + `/api/issue/value?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
+  + `/api/issue/objective?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
+  + `/api/issue/policy?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
 
 *  **URL Params**
 
    **Required:**
    `filter_id=[string]` For all endpoints except `/api/community`
+   
+   **Optional:**
+   `user_id=[string]` For `/api/issue/(value|policy|ojective)` endpoints, a `user_id` parameter can be included
+   to only return nodes ranked by that user.
   
 
 * **Success Response:**
