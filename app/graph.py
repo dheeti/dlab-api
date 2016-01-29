@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from py2neo import Graph as NeoGraph, Node, Relationship
 from app.mod_api.auth import Authenticate
-
+import uuid
 
 class Nodes(object):
     def __init__(self, graph):
@@ -32,7 +32,9 @@ class Nodes(object):
         return nodes
 
     def find_all_withUserID(self, label, user_id, **kwargs):
-        # similar to find_all, but filter with a specific user_id
+        """
+        Similar to find_all, but filter with a specific user_id
+ 	"""
         user = self.find("User", user_id)
         parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         data = []
@@ -100,6 +102,51 @@ class Graph(object):
             self.graph.create(node)
             return node, True
         return node, False
+
+    def create_nodes(self, List, nodeType):
+        # create nodes of 1 type (value/objective/policy)
+        # written to support create_issue
+        nodeList = []
+        for name in List:
+            properties = dict(
+                node_id=uuid.uuid4(),
+                name=name
+            )
+            node = Node(nodeType, **properties)
+            self.graph.create(node)
+            nodeList.append(node)
+        return nodeList    
+
+    def create_links_from1Node(self, sourceNode, nodeList,linkType,properties):
+        # create links from sourceNode to nodes in nodeList
+        # with specified linkType and properties
+        # written to support create_issue
+        for node in nodeList:
+            self.graph.create(Relationship(sourceNode,linkType,node,**properties))
+
+    def create_issue(self, args):
+        # create a new issue Node
+        # assign a random node_id using python uuid module
+	# below try uuid4, uuid1 works as well 
+        issue_properties = dict(
+                node_id=uuid.uuid4(),
+                name=args["issue_name"],
+                desc=args["desc"]
+            )
+        issueNode = Node("Issue",**issue_properties)
+        self.graph.create(issueNode)
+ 
+        # create values/objectives/policies associated with the new issue
+        valueNodes = create_nodes(args["values"],"Value")
+        objectiveNodes = create_nodes(args["objectives"],"Objective")
+        policyNodes = create_nodes(args["policies"],"Policy") 
+                 
+        # create links
+        create_links_from1Node(issueNode,valueNodes,"HAS",[])
+        create_links_from1Node(issueNode,objectiveNodes,"HAS",[])
+        create_links_from1Node(issueNode,policyNodes,"HAS",[])
+
+        return issue_properties["node_id"]
 
     def user_rank(self, args, node_type):
         # success = False

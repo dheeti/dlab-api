@@ -84,3 +84,11 @@ class Args(object):
     get_summary = {
         'issue_id':fields.Str(required=True)
     }
+
+    post_issue_creation = {
+        'issue_name': fields.Str(required=True),
+        'desc': fields.Str(required=False),
+	'values':fields.List(fields.Str,required=False),
+        'objectives':fields.List(fields.Str,required=False),
+        'policies': fields.List(fields.Str,required=False)
+    }

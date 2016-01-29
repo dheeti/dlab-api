@@ -89,3 +89,8 @@ class Handler(object):
         if success:
             return jsonify(success=success, data=response, invalid=invalid)
         return jsonify(success=False, error=response)
+
+    @staticmethod
+    def post_issue_creation(args):
+        issue_id = graph.create_issue(args)
+        return jsonify(success=True, issue_id = issue_id)

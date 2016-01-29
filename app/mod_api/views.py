@@ -159,3 +159,11 @@ Generate summary for stacked bar chart visualization
 def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
+
+"""
+Create a new issue
+"""
+@mod_api.route('/create_issue',methods=["POST"])
+@use_args(Args.post_issue_creation)
+def post_issue_creation(args):
+    return Handler.post_issue_creation(args)
