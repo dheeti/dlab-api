@@ -159,3 +159,22 @@ Generate summary for stacked bar chart visualization
 def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
+
+
+"""
+Analyze sentiment of Value-Objective rankings by countig occurences
+of the following ranking categories
+
+Disagree:    rank < 0
+Agree:       rank >= 0
+
+(Value,     Objective)
+----------------------
+(Disagree,  Disagree)
+(Disagree,  Agree)
+(Agree,     Disagree)
+(Agree,     Agree)
+"""
+@mod_api.route('/sentiment', methods=['GET'])
+def get_sentiment():
+    return Handler.get_sentiment()
