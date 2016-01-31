@@ -88,7 +88,7 @@ class Args(object):
     post_issue_creation = {
         'issue_name': fields.Str(required=True),
         'desc': fields.Str(required=False),
-	'values':fields.List(fields.Str,required=False),
-        'objectives':fields.List(fields.Str,required=False),
-        'policies': fields.List(fields.Str,required=False)
+	'values':fields.List(fields.Str,required=True),
+        'objectives':fields.List(fields.Str,required=True),
+        'policies': fields.List(fields.Str,required=True)
     }

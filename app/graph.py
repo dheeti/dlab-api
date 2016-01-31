@@ -103,10 +103,10 @@ class Graph(object):
             return node, True
         return node, False
 
-    def create_nodes(self, List, nodeType):
-        # create nodes of 1 type (value/objective/policy)
-        # written to support create_issue
-        nodeList = []
+    def create_nodes_linked_from1Node(self, sourceNode, nameList, nodeType, linkType,Link_Props):
+        # support function for create_issue 
+	# create nodes of 1 type (value/objective/policy)
+	# and link those to the sourceNode, with specified linkType and properties
         for name in List:
             properties = dict(
                 node_id=uuid.uuid4(),
@@ -114,15 +114,8 @@ class Graph(object):
             )
             node = Node(nodeType, **properties)
             self.graph.create(node)
+	    self.graph.create(Relationship(sourceNode, linkType, node, **Link_Props))
             nodeList.append(node)
-        return nodeList    
-
-    def create_links_from1Node(self, sourceNode, nodeList,linkType,properties):
-        # create links from sourceNode to nodes in nodeList
-        # with specified linkType and properties
-        # written to support create_issue
-        for node in nodeList:
-            self.graph.create(Relationship(sourceNode,linkType,node,**properties))
 
     def create_issue(self, args):
         # create a new issue Node
@@ -136,15 +129,10 @@ class Graph(object):
         issueNode = Node("Issue",**issue_properties)
         self.graph.create(issueNode)
  
-        # create values/objectives/policies associated with the new issue
-        valueNodes = create_nodes(args["values"],"Value")
-        objectiveNodes = create_nodes(args["objectives"],"Objective")
-        policyNodes = create_nodes(args["policies"],"Policy") 
-                 
-        # create links
-        create_links_from1Node(issueNode,valueNodes,"HAS",[])
-        create_links_from1Node(issueNode,objectiveNodes,"HAS",[])
-        create_links_from1Node(issueNode,policyNodes,"HAS",[])
+        # create new nodes and links for values/objectives/policies associated with the new issue
+        create_nodes_linked_from1Node(issueNode,args["values"],"Value","HAS",[])
+        create_links_from1Node(issueNode,args["objectives"],"Objective","HAS",[])
+        create_links_from1Node(issueNode,args["policies"],"Policy","HAS",[])
 
         return issue_properties["node_id"]
 
