@@ -101,5 +101,5 @@ class Handler(object):
         for row in results:
             for i, pctdev in enumerate(row.pctdev):
                 if pctdev > 0.2:
-                    print row.value, row.objective, i, row.stddev, pctdev
+                    print(row.value, row.objective, i, row.stddev, pctdev)
         return jsonify({})
