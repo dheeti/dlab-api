@@ -83,6 +83,15 @@ def post_login(args):
 
 
 """
+create a new issue
+"""
+@mod_api.route('/issue',methods=["POST"])
+@use_args(Args.post_issue)
+def post_issue(args):
+    return Handler.post_issue(args)
+
+
+"""
 retrieve data about a node as specified by it's node_id
 """
 @mod_api.route('/user', methods=['GET'])
@@ -160,10 +169,4 @@ def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
 
-"""
-Create a new issue
-"""
-@mod_api.route('/create_issue',methods=["POST"])
-@use_args(Args.post_issue_creation)
-def post_issue_creation(args):
-    return Handler.post_issue_creation(args)
+

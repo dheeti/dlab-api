@@ -4,6 +4,19 @@ from webargs import fields
 class Args(object):
     
     """
+    POST /api/issue
+    
+    Create a new issue
+    """
+    post_issue = {
+        'issue_name': fields.Str(required=True),
+        'desc': fields.Str(required=False, default=""),
+	'values':fields.List(fields.Str,required=True),
+        'objectives':fields.List(fields.Str,required=True),
+        'policies': fields.List(fields.Str,required=True)
+    } 
+
+    """
     GET /api/user
     GET /api/issue
     GET /api/value
@@ -50,14 +63,7 @@ class Args(object):
         'username':fields.Str(required=True),
         'password':fields.Str(required=True)
     }
-    
-    """
-    POST /api/logout
-    """
-    post_logout = {
-        'username':fields.Str(required=True)
-    }
-  
+
     """
     POST /api/rank/<node>
     
@@ -80,15 +86,14 @@ class Args(object):
         'dst_id':fields.Str(required=True),
         'strength':fields.Int(required=True)
     }
-
+    
+    """
+    GET /api/summary/value?issue_id=<id>
+    GET /api/summary/objective?issue_id=<id>
+    GET /api/summary/policy?issue_id=<id>
+    
+    Get histogram data for how users ranked certain nodes
+    """
     get_summary = {
         'issue_id':fields.Str(required=True)
-    }
-
-    post_issue_creation = {
-        'issue_name': fields.Str(required=True),
-        'desc': fields.Str(required=False),
-	'values':fields.List(fields.Str,required=True),
-        'objectives':fields.List(fields.Str,required=True),
-        'policies': fields.List(fields.Str,required=True)
     }

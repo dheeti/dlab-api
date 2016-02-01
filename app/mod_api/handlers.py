@@ -91,6 +91,6 @@ class Handler(object):
         return jsonify(success=False, error=response)
 
     @staticmethod
-    def post_issue_creation(args):
+    def post_issue(args):
         issue_id = graph.create_issue(args)
         return jsonify(success=True, issue_id = issue_id)

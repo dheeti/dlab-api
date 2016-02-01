@@ -34,7 +34,7 @@ class Nodes(object):
     def find_all_withUserID(self, label, user_id, **kwargs):
         """
         Similar to find_all, but filter with a specific user_id
- 	"""
+        """
         user = self.find("User", user_id)
         parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         data = []
@@ -103,7 +103,8 @@ class Graph(object):
             return node, True
         return node, False
 
-    def create_nodes_linked_from1Node(self, sourceNode, nameList, nodeType, linkType,Link_Props):
+    def create_nodes_linked_from1Node(
+            self, sourceNode, nameList, nodeType, linkType,Link_Props):
         # support function for create_issue 
 	# create nodes of 1 type (value/objective/policy)
 	# and link those to the sourceNode, with specified linkType and properties
@@ -114,7 +115,7 @@ class Graph(object):
             )
             node = Node(nodeType, **properties)
             self.graph.create(node)
-	    self.graph.create(Relationship(sourceNode, linkType, node, **Link_Props))
+            self.graph.create(Relationship(sourceNode, linkType, node, **Link_Props))
             nodeList.append(node)
 
     def create_issue(self, args):
@@ -126,14 +127,14 @@ class Graph(object):
                 name=args["issue_name"],
                 desc=args["desc"]
             )
-        issueNode = Node("Issue",**issue_properties)
+        issueNode = Node("Issue", **issue_properties)
         self.graph.create(issueNode)
  
-        # create new nodes and links for values/objectives/policies associated with the new issue
-        create_nodes_linked_from1Node(issueNode,args["values"],"Value","HAS",[])
-        create_links_from1Node(issueNode,args["objectives"],"Objective","HAS",[])
-        create_links_from1Node(issueNode,args["policies"],"Policy","HAS",[])
-
+        # create new nodes and links for values/objectives/policies
+        # associated with the new issue
+        create_nodes_linked_from1Node(issueNode, args["values"], "Value", "HAS", [])
+        create_links_from1Node(issueNode, args["objectives"], "Objective", "HAS", [])
+        create_links_from1Node(issueNode, args["policies"], "Policy", "HAS", [])
         return issue_properties["node_id"]
 
     def user_rank(self, args, node_type):
@@ -158,7 +159,6 @@ class Graph(object):
             if "issue_id" in args:
                 properties["issue_id"] = args["issue_id"]
             self.graph.create(Relationship(user, "RANKS", node, **properties))
-
         return True, ""
 
     def user_map(self, args, src_node, dst_node):
@@ -214,7 +214,6 @@ class Graph(object):
                 dst_rank=dst_rank
             )
             self.graph.create(Relationship(user, "MAPS", map_node, **properties))
-
         return True, ""
 
     def get_summary(self, issue_id, node_type):
