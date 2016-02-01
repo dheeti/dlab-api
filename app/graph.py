@@ -103,38 +103,40 @@ class Graph(object):
             return node, True
         return node, False
 
-    def create_nodes_linked_from1Node(
-            self, sourceNode, nameList, nodeType, linkType,Link_Props):
+    def create_issue_nodes(
+            self, parent, names, node_type, link_type="HAS", link_prop={}):
         # support function for create_issue 
 	# create nodes of 1 type (value/objective/policy)
 	# and link those to the sourceNode, with specified linkType and properties
-        for name in List:
+        nodes = []
+        for name in names:
             properties = dict(
-                node_id=uuid.uuid4(),
+                node_id=str(uuid.uuid4()),
                 name=name
             )
-            node = Node(nodeType, **properties)
+            node = Node(node_type, **properties)
             self.graph.create(node)
-            self.graph.create(Relationship(sourceNode, linkType, node, **Link_Props))
-            nodeList.append(node)
+            self.graph.create(Relationship(parent, link_type, node, **link_prop))
+            nodes.append(node)
+        return nodes
 
     def create_issue(self, args):
         # create a new issue Node
         # assign a random node_id using python uuid module
 	# below try uuid4, uuid1 works as well 
         issue_properties = dict(
-                node_id=uuid.uuid4(),
+                node_id=str(uuid.uuid4()),
                 name=args["issue_name"],
                 desc=args["desc"]
             )
-        issueNode = Node("Issue", **issue_properties)
-        self.graph.create(issueNode)
+        issue_node = Node("Issue", **issue_properties)
+        self.graph.create(issue_node)
  
         # create new nodes and links for values/objectives/policies
         # associated with the new issue
-        create_nodes_linked_from1Node(issueNode, args["values"], "Value", "HAS", [])
-        create_links_from1Node(issueNode, args["objectives"], "Objective", "HAS", [])
-        create_links_from1Node(issueNode, args["policies"], "Policy", "HAS", [])
+        self.create_issue_nodes(issue_node, args["values"], "Value")
+        self.create_issue_nodes(issue_node, args["objectives"], "Objective")
+        self.create_issue_nodes(issue_node, args["policies"], "Policy")
         return issue_properties["node_id"]
 
     def user_rank(self, args, node_type):
