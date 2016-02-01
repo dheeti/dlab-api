@@ -93,4 +93,4 @@ class Handler(object):
     @staticmethod
     def post_issue(args):
         issue_id = graph.create_issue(args)
-        return jsonify(success=True, issue_id = issue_id)
+        return jsonify(success=True, issue_id=issue_id)
