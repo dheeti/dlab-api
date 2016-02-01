@@ -241,6 +241,7 @@ class Graph(object):
             RETURN
                 r.rank AS rank,
                 v.node_id AS node_id,
+                v.name AS name,
                 count(u.node_id) AS count
             ORDER BY
                 node_id, rank
@@ -250,9 +251,9 @@ class Graph(object):
         invalid = []
         for row in results:
             if row.node_id not in nodes:
-                nodes[row.node_id] = [0, 0, 0, 0, 0]
+                nodes[row.node_id] = dict(name=row.name, data=[0, 0, 0, 0, 0])
             if row.rank in range(-2, 3):
-                nodes[row.node_id][row.rank + 2] = row.count
+                nodes[row.node_id]["data"][row.rank + 2] = row.count
             else:
                 invalid.append(row.rank)
         return True, nodes, invalid
