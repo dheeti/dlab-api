@@ -86,9 +86,11 @@ def post_login(args):
 create a new issue
 """
 @mod_api.route('/issue',methods=["POST"])
-@use_args(Args.post_issue)
-def post_issue(args):
-    return Handler.post_issue(args)
+def post_issue():
+    errors, data = Args.parse_post_issue(request.form)
+    if errors:
+        return jsonify(success=False, errors=errors)
+    return Handler.post_issue(data)
 
 
 """
