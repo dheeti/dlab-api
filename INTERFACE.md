@@ -5,6 +5,7 @@
 
 **Basic Functionality**
 
++ Create an issue *(POST)*
 + Create a user *(POST)*
     + NOTE: not secure using http
 + Authenticate a user *(POST)*
@@ -13,7 +14,7 @@
 + Retrieve all nodes of a given type *(GET)*
 + Rank a node as a user *(POST)*
 + Map a connection between two nodes *(POST)*
-
++ Generate summary for stacked bar chart visualization *(GET)*
 
 
 
