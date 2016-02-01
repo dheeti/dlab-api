@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from py2neo import Graph as NeoGraph, Node, Relationship
+
 from app.mod_api.auth import Authenticate
 import uuid
 
@@ -36,13 +37,17 @@ class Nodes(object):
         Similar to find_all, but filter with a specific user_id
         """
         user = self.find("User", user_id)
+        if not user:
+            return []
         parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         data = []
         for link in parent.match():
             link_user = self.graph.match_one(start_node=user, end_node=link.end_node)
-            if link_user:
-                if label in link_user.end_node.labels:
-                    data.append(link.end_node.properties)
+            if link_user and label in link_user.end_node.labels:
+                data.append(dict(
+                    rank=link_user.properties["rank"],
+                    node_id=link_user.end_node.properties["node_id"]
+                ))
         return data
 
     def create(self, node_type, properties):
@@ -83,10 +88,17 @@ class Links(object):
 
 
 class Graph(object):
+
     def __init__(self, neo4j_uri):
         self.graph = NeoGraph(neo4j_uri)
         self.nodes = Nodes(self.graph)
         self.links = Links(self.graph)
+
+    def execute_raw(self, cqlfile):
+        cypher = self.graph.cypher
+        with open(cqlfile, 'r') as query:
+            return cypher.execute(query.read())
+        return []
 
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
@@ -152,8 +164,7 @@ class Graph(object):
             return False, "invalid node_id"
 
         link = self.links.find(user, node, "RANKS")
-        if link and ("issue_id" not in args or
-                     link.properties["issue_id"] == args["issue_id"]):
+        if link:
             link.properties["rank"] = args["rank"]
             link.push()
         else:

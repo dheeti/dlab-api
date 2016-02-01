@@ -5,6 +5,9 @@ from flask import Flask
 from flask.ext.cors import CORS
 from app.graph import Graph
 
+# make directory with cypher scripts available
+parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CQLDIR = os.path.join(parent, "cql")
 
 app = Flask(__name__)
 app.config.from_object('config')

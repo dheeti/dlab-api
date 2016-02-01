@@ -169,4 +169,12 @@ def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
 
+"""
+IN PROGRESS
 
+Analyze sentiment of Value-Objective rankings by countig occurences
+of the following ranking categories
+"""
+#@mod_api.route('/sentiment', methods=['GET'])
+#def get_sentiment():
+#   return Handler.get_sentiment()
