@@ -3,19 +3,37 @@ from webargs import fields
 
 class Args(object):
     
+    
     """
     POST /api/issue
     
     Create a new issue
-    """
+    
     post_issue = {
-        'issue_name': fields.Str(required=True),
-        'desc': fields.Str(required=False, default=""),
-	'values':fields.List(fields.Str,required=True),
-        'objectives':fields.List(fields.Str,required=True),
-        'policies': fields.List(fields.Str,required=True)
+        'issue_name': <string>,                         // required
+        'desc': <string>,                               // optional
+        'values': [ <list of value names> ],            // required
+        'objectives': [ <list of objective names> ],    // required
+        'policies': [ <list of policy names> ]          // required
     } 
-
+    """
+   
+    @staticmethod
+    def parse_post_issue(args):
+        errors = []
+        data = {}
+        if "issue_name" not in args:
+            errors.append("Missing `issue_name` parameter")
+        else:
+            data["issue_name"] = args.get("issue_name")
+        data["desc"] = args.get("desc", default="")
+        for node_type in ["values", "objectives", "policies"]:
+            nodes = args.getlist(node_type + "[]")
+            if len(nodes) <= 0: 
+                errors.append("Missing `{0}` node list".format(node_type))
+            data[node_type] = nodes
+        return errors, data
+    
     """
     GET /api/user
     GET /api/issue
