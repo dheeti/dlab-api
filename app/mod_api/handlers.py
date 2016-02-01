@@ -3,7 +3,7 @@ import os
 
 from flask import jsonify, session
 
-from app import graph
+from app import graph, CQLDIR
 from app.mod_api.auth import Authenticate
 
 
@@ -52,7 +52,11 @@ class Handler(object):
         kwargs = {}
         if parent_type:
             if "user_id" in args:
-                kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"], user_id=args["user_id"])
+                kwargs = dict(
+                    parent_label=parent_type,
+                    parent_id=args["filter_id"],
+                    user_id=args["user_id"]
+                )
                 data = graph.nodes.find_all_withUserID(child_type, **kwargs)
             else:
                 kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
@@ -89,3 +93,18 @@ class Handler(object):
         if success:
             return jsonify(success=success, data=response, invalid=invalid)
         return jsonify(success=False, error=response)
+
+    @staticmethod
+    def post_issue(args):
+        issue_id = graph.create_issue(args)
+        return jsonify(success=True, issue_id=issue_id)
+
+    @staticmethod
+    def get_sentiment():
+        filename = "value_objective_sentiment.cql"
+        results = graph.execute_raw(os.path.join(CQLDIR, filename))
+        for row in results:
+            for i, pctdev in enumerate(row.pctdev):
+                if pctdev > 0.2:
+                    print(row.value, row.objective, i, row.stddev, pctdev)
+        return jsonify({})

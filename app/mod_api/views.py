@@ -83,6 +83,15 @@ def post_login(args):
 
 
 """
+create a new issue
+"""
+@mod_api.route('/issue',methods=["POST"])
+@use_args(Args.post_issue)
+def post_issue(args):
+    return Handler.post_issue(args)
+
+
+"""
 retrieve data about a node as specified by it's node_id
 """
 @mod_api.route('/user', methods=['GET'])
@@ -159,3 +168,13 @@ Generate summary for stacked bar chart visualization
 def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
+
+"""
+IN PROGRESS
+
+Analyze sentiment of Value-Objective rankings by countig occurences
+of the following ranking categories
+"""
+#@mod_api.route('/sentiment', methods=['GET'])
+#def get_sentiment():
+#   return Handler.get_sentiment()
