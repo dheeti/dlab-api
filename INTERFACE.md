@@ -15,6 +15,51 @@
 + Map a connection between two nodes *(POST)*
 
 
+
+
+**Create an Issue**
+----
+  Send issue information and Value|Objective|Policy node information
+  to create an issue
+
+* **Method:**
+  
+  `POST`
+
+* **URL**
+
+  + `/api/issue`
+
+* **Data Params**
+
+  ```
+  {
+    issue_name:     <name string>,          // required
+    desc:           <description string>,   // optional
+    values:         [ <name string>, ... , <name string> ],
+    objectives:     [ <name string>, ... , <name string> ],
+    policies:       [ <name string>, ... , <name string> ]
+  }
+  ```
+  
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+    
+    ```
+    {
+      success:      [boolean],
+      issue_id:     [string]    // issue_id for the newly created issue
+    }
+    ```
+
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
+
+
 **Create User**
 ----
   Create a new user (NOTE: not secure unless over https)
