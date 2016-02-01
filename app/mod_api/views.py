@@ -162,19 +162,11 @@ def get_summary(args):
 
 
 """
+IN PROGRESS
+
 Analyze sentiment of Value-Objective rankings by countig occurences
 of the following ranking categories
-
-Disagree:    rank < 0
-Agree:       rank >= 0
-
-(Value,     Objective)
-----------------------
-(Disagree,  Disagree)
-(Disagree,  Agree)
-(Agree,     Disagree)
-(Agree,     Agree)
 """
-@mod_api.route('/sentiment', methods=['GET'])
-def get_sentiment():
-    return Handler.get_sentiment()
+#@mod_api.route('/sentiment', methods=['GET'])
+#def get_sentiment():
+#   return Handler.get_sentiment()
