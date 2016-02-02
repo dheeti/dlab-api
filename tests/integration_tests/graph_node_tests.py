@@ -55,7 +55,7 @@ class NodesFindAllTest(unittest.TestCase):
         nodes = graph.nodes.find_all("TestValue", **args)
         for node in nodes:
             self.assertIn(node["node_id"], nodeIn_ids)
-            self.assertNotEqual(node["node_id"], nodeNotIn_ids)
+            self.assertNotIn(node["node_id"], nodeNotIn_ids)
 
     def test_parent_issue_findall_withUserID(self):
         """
@@ -68,7 +68,7 @@ class NodesFindAllTest(unittest.TestCase):
         nodes = graph.nodes.find_all_withUserID("TestValue", self.user.node_id,**args)
         for node in nodes:
             self.assertIn(node["node_id"], nodeIn_ids)
-            self.assertNotEqual(node["node_id"], nodeNotIn_ids)
+            self.assertNotIn(node["node_id"], nodeNotIn_ids)
 		
 			
 if __name__ == '__main__':
