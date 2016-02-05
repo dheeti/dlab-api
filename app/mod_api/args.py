@@ -28,7 +28,9 @@ class Args(object):
             data["issue_name"] = args.get("issue_name")
         data["desc"] = args.get("desc", default="")
         for node_type in ["values", "objectives", "policies"]:
-            nodes = args.getlist(node_type + "[]")
+            nodes = args.getlist(node_type)
+            if not nodes:
+                nodes = args.getlist(node_type + "[]")
             if len(nodes) <= 0: 
                 errors.append("Missing `{0}` node list".format(node_type))
             data[node_type] = nodes
