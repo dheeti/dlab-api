@@ -5,6 +5,7 @@
 
 **Basic Functionality**
 
++ Create an issue *(POST)*
 + Create a user *(POST)*
     + NOTE: not secure using http
 + Authenticate a user *(POST)*
@@ -13,6 +14,51 @@
 + Retrieve all nodes of a given type *(GET)*
 + Rank a node as a user *(POST)*
 + Map a connection between two nodes *(POST)*
++ Generate summary for stacked bar chart visualization *(GET)*
+
+
+
+**Create an Issue**
+----
+  Send issue information and Value|Objective|Policy node information
+  to create an issue
+
+* **Method:**
+  
+  `POST`
+
+* **URL**
+
+  + `/api/issue`
+
+* **Data Params**
+
+  ```
+  {
+    issue_name:     <name string>,          // required
+    desc:           <description string>,   // optional
+    values:         [ <name string>, ... , <name string> ],
+    objectives:     [ <name string>, ... , <name string> ],
+    policies:       [ <name string>, ... , <name string> ]
+  }
+  ```
+  
+* **Success Response:**
+
+  * **Code:** 200 OK <br />
+    **Content:**
+    
+    ```
+    {
+      success:      [boolean],
+      issue_id:     [string]    // issue_id for the newly created issue
+    }
+    ```
+
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTITY <br />
+    **Cause:** Invalid request parameters
 
 
 **Create User**
@@ -140,15 +186,19 @@
 * **URL**
 
   + `/api/communnity`
-  + `/api/community/issue?filter_id=string` *filter_id* must be valid **Community** node id
-  + `/api/issue/value?filter_id=string` *filter_id* must be valid **Issue** node id
-  + `/api/issue/objective?filter_id=string` *filter_id* must be valid **Issue** node id
-  + `/api/issue/policy?filter_id=string` *filter_id* must be valid **Issue** node id
+  + `/api/community/issue?filter_id=string` `filter_id` must be valid **Community** node id
+  + `/api/issue/value?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
+  + `/api/issue/objective?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
+  + `/api/issue/policy?filter_id=string[&user_id=string]` `filter_id` must be valid **Issue** node id
 
 *  **URL Params**
 
    **Required:**
    `filter_id=[string]` For all endpoints except `/api/community`
+   
+   **Optional:**
+   `user_id=[string]` For `/api/issue/(value|policy|ojective)` endpoints, a `user_id` parameter can be included
+   to only return nodes ranked by that user.
   
 
 * **Success Response:**
@@ -277,9 +327,15 @@
         success : True|False
         invalid : [invalid rank, ... , invalid rank],    // any values not in likert scale
         data : {
-            node_id : [ SD count, D count, N count, A count, SA count ],
-            ...
-            node_id : [ SD count, D count, N count, A count, SA count ]
+            node_id : {
+                name: <node name>,
+                data: [ SD count, D count, N count, A count, SA count ]
+            },
+            ... ,
+            node_id : {
+                name: <node name>,
+                data: [ SD count, D count, N count, A count, SA count ]
+            }
         }
         error : "error message" // only present if success == False
     }

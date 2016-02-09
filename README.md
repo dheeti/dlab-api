@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/psu-capstone/dlab-api.svg)](https://travis-ci.org/psu-capstone/dlab-api)
 
-For the build to pass you must set a `NEO4J_URI` environment variable on Travis to point to a Neo4j instance.
-
 
 
 ## running

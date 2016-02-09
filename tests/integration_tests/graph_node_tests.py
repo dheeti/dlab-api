@@ -49,27 +49,24 @@ class NodesFindAllTest(unittest.TestCase):
         test that only TestValue nodes 0, 1, 4 are returned as the other nodes do
         not have a link from the TestIssue node
         """
-        nodeIn_ids = [self.nodes[0].node_id, self.nodes[1].node_id, self.nodes[4].node_id]
-        nodeNotIn_ids = [self.nodes[2].node_id, self.nodes[3].node_id]
+        nodeIn_ids = sorted([self.nodes[0].node_id, self.nodes[1].node_id, self.nodes[4].node_id])
         args = dict(parent_id=self.issue.node_id, parent_label="TestIssue")
-        nodes = graph.nodes.find_all("TestValue", **args)
-        for node in nodes:
-            self.assertIn(node["node_id"], nodeIn_ids)
-            self.assertNotEqual(node["node_id"], nodeNotIn_ids)
+        answer_ids = sorted([node["node_id"] for node in graph.nodes.find_all("TestValue", **args)])
+        self.assertEqual(nodeIn_ids, answer_ids)
 
     def test_parent_issue_findall_withUserID(self):
         """
         test that only TestValue 2 nodes 0, 4 are returned as the other nodes do
         not have a link from the TestIssue node or are not ranked by the user
         """
-        nodeIn_ids = [self.nodes[0].node_id, self.nodes[4].node_id]
-        nodeNotIn_ids = [self.nodes[1].node_id, self.nodes[2].node_id, self.nodes[3].node_id]
+        nodeIn_ids = sorted([self.nodes[0].node_id, self.nodes[4].node_id])
         args = dict(parent_id=self.issue.node_id, parent_label="TestIssue")
-        nodes = graph.nodes.find_all_withUserID("TestValue", self.user.node_id,**args)
-        for node in nodes:
-            self.assertIn(node["node_id"], nodeIn_ids)
-            self.assertNotEqual(node["node_id"], nodeNotIn_ids)
-		
+        answer_nodes = graph.nodes.find_all_withUserID("TestValue", self.user.node_id,**args)
+	#for node in nodes:
+	#    self.assertIn(node["node_id"], nodeIn_ids)
+	#    self.assertNotIn(node["node_id"], nodeNotIn_ids)
+        answer_ids = sorted([node["node_id"] for node in answer_nodes])
+        self.assertEqual(nodeIn_ids, answer_ids)
 			
 if __name__ == '__main__':
     unittest.main()

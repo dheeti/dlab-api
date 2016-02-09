@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 from py2neo import Graph as NeoGraph, Node, Relationship
-from app.mod_api.auth import Authenticate
 
+from app.mod_api.auth import Authenticate
+import uuid
 
 class Nodes(object):
     def __init__(self, graph):
@@ -32,15 +33,21 @@ class Nodes(object):
         return nodes
 
     def find_all_withUserID(self, label, user_id, **kwargs):
-        # similar to find_all, but filter with a specific user_id
+        """
+        Similar to find_all, but filter with a specific user_id
+        """
         user = self.find("User", user_id)
+        if not user:
+            return []
         parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         data = []
         for link in parent.match():
             link_user = self.graph.match_one(start_node=user, end_node=link.end_node)
-            if link_user:
-                if label in link_user.end_node.labels:
-                    data.append(link.end_node.properties)
+            if link_user and label in link_user.end_node.labels:
+                data.append(dict(
+                    rank=link_user.properties["rank"],
+                    node_id=link_user.end_node.properties["node_id"]
+                ))
         return data
 
     def create(self, node_type, properties):
@@ -81,10 +88,17 @@ class Links(object):
 
 
 class Graph(object):
+
     def __init__(self, neo4j_uri):
         self.graph = NeoGraph(neo4j_uri)
         self.nodes = Nodes(self.graph)
         self.links = Links(self.graph)
+
+    def execute_raw(self, cqlfile):
+        cypher = self.graph.cypher
+        with open(cqlfile, 'r') as query:
+            return cypher.execute(query.read())
+        return []
 
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
@@ -101,6 +115,42 @@ class Graph(object):
             return node, True
         return node, False
 
+    def create_issue_nodes(
+            self, parent, names, node_type, link_type="HAS", link_prop={}):
+        # support function for create_issue 
+	# create nodes of 1 type (value/objective/policy)
+	# and link those to the sourceNode, with specified linkType and properties
+        nodes = []
+        for name in names:
+            properties = dict(
+                node_id=str(uuid.uuid4()),
+                name=name
+            )
+            node = Node(node_type, **properties)
+            self.graph.create(node)
+            self.graph.create(Relationship(parent, link_type, node, **link_prop))
+            nodes.append(node)
+        return nodes
+
+    def create_issue(self, args):
+        # create a new issue Node
+        # assign a random node_id using python uuid module
+	# below try uuid4, uuid1 works as well 
+        issue_properties = dict(
+                node_id=str(uuid.uuid4()),
+                name=args["issue_name"],
+                desc=args["desc"]
+            )
+        issue_node = Node("Issue", **issue_properties)
+        self.graph.create(issue_node)
+ 
+        # create new nodes and links for values/objectives/policies
+        # associated with the new issue
+        self.create_issue_nodes(issue_node, args["values"], "Value")
+        self.create_issue_nodes(issue_node, args["objectives"], "Objective")
+        self.create_issue_nodes(issue_node, args["policies"], "Policy")
+        return issue_properties["node_id"]
+
     def user_rank(self, args, node_type):
         # success = False
         # errors = []
@@ -114,8 +164,7 @@ class Graph(object):
             return False, "invalid node_id"
 
         link = self.links.find(user, node, "RANKS")
-        if link and ("issue_id" not in args or
-                     link.properties["issue_id"] == args["issue_id"]):
+        if link:
             link.properties["rank"] = args["rank"]
             link.push()
         else:
@@ -123,7 +172,6 @@ class Graph(object):
             if "issue_id" in args:
                 properties["issue_id"] = args["issue_id"]
             self.graph.create(Relationship(user, "RANKS", node, **properties))
-
         return True, ""
 
     def user_map(self, args, src_node, dst_node):
@@ -179,7 +227,6 @@ class Graph(object):
                 dst_rank=dst_rank
             )
             self.graph.create(Relationship(user, "MAPS", map_node, **properties))
-
         return True, ""
 
     def get_summary(self, issue_id, node_type):
@@ -194,6 +241,7 @@ class Graph(object):
             RETURN
                 r.rank AS rank,
                 v.node_id AS node_id,
+                v.name AS name,
                 count(u.node_id) AS count
             ORDER BY
                 node_id, rank
@@ -203,9 +251,9 @@ class Graph(object):
         invalid = []
         for row in results:
             if row.node_id not in nodes:
-                nodes[row.node_id] = [0, 0, 0, 0, 0]
+                nodes[row.node_id] = dict(name=row.name, data=[0, 0, 0, 0, 0])
             if row.rank in range(-2, 3):
-                nodes[row.node_id][row.rank + 2] = row.count
+                nodes[row.node_id]["data"][row.rank + 2] = row.count
             else:
                 invalid.append(row.rank)
         return True, nodes, invalid
