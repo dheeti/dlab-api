@@ -12,8 +12,8 @@ from app.mod_api.args import Args
 
 """
 This file contains all of the routes our api can process. When a HTTP request
-is made that mades one of our routes, that request will be passed to the function
-registered to handle it. A HTTP response will be constructed and sent
+is made that mades one of our routes, that request will be passed to the
+function registered to handle it. A HTTP response will be constructed and sent
 back to the client.
 
 The process for handling most requests is:
@@ -26,10 +26,10 @@ which is used to validate the request that all the required fields are present.
     + Args definition is passed to function with `@use_args` decorator and
     then passed to handling function as an argument
 
-2. Pass the request arguments to it's appropriate Handler. The Handler is responsible
-for interacting with the graph to retrieve the requested data or update the state
-of the system. All Handler methods will return a json response object that is sent
-to the client.
+2. Pass the request arguments to it's appropriate Handler. The Handler is
+responsible for interacting with the graph to retrieve the requested data or
+update the state of the system. All Handler methods will return a json response
+object that is sent to the client.
 
     + See `/app/mod_api/handlers.py`
     + Most of the heavy lifting for the database is done using a graph
@@ -51,9 +51,8 @@ def handle_bad_request(err):
     as specified by use_args() input
     """
     data = getattr(err, 'data')
-    if data: message = data['exc'].messages
-    else: message = "invalid request"
-    return jsonify({"error": message }), 422
+    message = data['exc'].messages if data else "invalid request"
+    return jsonify({"error": message}), 422
 
 
 @mod_api.route('')
@@ -82,7 +81,7 @@ def post_login(args):
     return Handler.post_login(args)
 
 
-@mod_api.route('/issue',methods=["POST"])
+@mod_api.route('/issue', methods=["POST"])
 def post_issue():
     """
     create a new issue
