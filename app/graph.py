@@ -46,7 +46,7 @@ class Nodes(object):
         """
         query = """MATCH (p:`%s` {node_id: {p_id}})-->(n:`%s`)<-[r]-(u:User {node_id: {u_id}})
                    RETURN r.rank as rank, n.node_id as node_id"""
-        query = query % kwargs['parent_label'], label
+        query = query % (kwargs['parent_label'], label)
         return [{'rank': m.rank, 'node_id': m.node_id} for m in self.graph.cypher.stream(
             query, p_id=kwargs['parent_id'], u_id=user_id)]
         # user = self.find("User", user_id)
