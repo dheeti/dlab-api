@@ -176,10 +176,10 @@ def get_summary(args):
 Return data for sankey chart of correlation
 or ranking Value -> Objective and Objective -> Policy
 """
-#@mod_api.route('/sankey', methods=["GET"])
-#@use_args(Args.post_map)
-#def get_sankey(args):
-#    return Handler.post_map(args, src_node, dst_node)
+@mod_api.route('/sankey', methods=["GET"])
+@use_args(Args.get_sankey)
+def get_sankey(args):
+    return Handler.get_sankey(args["issue_id"])
 
 
 """
@@ -190,4 +190,4 @@ of the following ranking categories
 """
 #@mod_api.route('/sentiment', methods=['GET'])
 #def get_sentiment():
-#   return Handler.get_sentiment()
+#   return Handler.get_sentiment(
