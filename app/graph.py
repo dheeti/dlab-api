@@ -252,7 +252,7 @@ class Graph(object):
         nodes = {row.node_id: {'name': row.name, 'data': row.data}
                  for row in self.graph.cypher.stream(query, issue_id=issue_id)}
         invalid_query = """
-        MATCH (:User)-[r:RANKS]-(:`{0}`)<-[:HAS]-(:Issue {{node_id: {{issue_id}}}})
+        MATCH (:User)-[r:RANKS]-(:`{0}`)<-[:HAS]-(i:Issue)
         WHERE i.node_id = {{issue_id}}
         AND (r.rank < -2 OR r.rank > 2)
         RETURN r.rank as rank
