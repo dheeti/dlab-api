@@ -120,3 +120,10 @@ class Args(object):
     get_summary = {
         'issue_id':fields.Str(required=True)
     }
+
+    """
+    GET /api/sankey
+    """
+    get_sankey = {
+        'issue_id':fields.Str(required=True)
+    }
