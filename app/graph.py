@@ -213,8 +213,9 @@ class Graph(object):
 
         # fetch map node or create if it doesn't exist
         map_id = "{0}-{1}".format(args["src_id"], args["dst_id"])
-        map_node, = self.graph.create_unique(
-            Node("Map", node_id=map_id), (src, "MAPS", 0), (0, "MAPS", dst))
+        map_node = self.graph.merge_one("Map", 'node_id', map_id)
+        self.graph.create_unique(
+            (src, "MAPS", map_node), (map_node, "MAPS", dst))
 
         new_props = {
             "strength": args["strength"],
