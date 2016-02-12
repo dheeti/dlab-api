@@ -9,6 +9,7 @@ import unittest
 root = dirname(dirname(dirname(abspath(__file__))))
 sys.path.append(root)
 
+from shared import safe_json_loads
 
 from app import app, CQLDIR, graph
 
@@ -27,7 +28,7 @@ class SankeyTest(unittest.TestCase):
     def test_basic(self):
         rv = self.app.get("/api/sankey", data=dict(issue_id="i"))
         self.assertIs(rv.status_code, 200)
-        data = json.loads(rv.data)
+        data = safe_json_loads(rv.data)
         self.assertIn("links", data)
         self.assertIn("nodes", data)
 
