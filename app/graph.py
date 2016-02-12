@@ -211,34 +211,21 @@ class Graph(object):
         if errors:
             return False, ", ".join(errors)
 
-        src_rank = src_link.properties["rank"]
-        dst_rank = dst_link.properties["rank"]
-
         # fetch map node or create if it doesn't exist
         map_id = "{0}-{1}".format(args["src_id"], args["dst_id"])
-        map_node = self.nodes.find("Map", map_id)
-        if not map_node:
-            properties = dict(node_id=map_id)
-            map_node = Node("Map", **properties)
-            self.graph.create(map_node)
-            self.graph.create(Relationship(src, "MAPS", map_node, **{}))
-            self.graph.create(Relationship(map_node, "MAPS", dst, **{}))
+        map_node, = self.graph.create_unique(
+            Node("Map", node_id=map_id), (src, "MAPS", 0), (0, "MAPS", dst))
 
-        user_map_link = self.links.find(user, map_node, "MAPS")
-        if user_map_link:
-            # link already exists, update strength
-            user_map_link.properties["strength"] = args["strength"]
-            user_map_link.properties["src_rank"] = src_rank
-            user_map_link.properties["dst_rank"] = dst_rank
-            self.graph.push()
-        else:
-            # create new link from user to map node
-            properties = dict(
-                strength=args["strength"],
-                src_rank=src_rank,
-                dst_rank=dst_rank
-            )
-            self.graph.create(Relationship(user, "MAPS", map_node, **properties))
+        new_props = {
+            "strength": args["strength"],
+            "src_rank": src_link["rank"],
+            "dst_rank": dst_link["rank"]
+        }
+        # Create (or return existing) user-map link, then update properties
+        user_map_link, = self.graph.create_unique(
+            Relationship(user, "MAPS", map_node))
+        user_map_link.properties.update(new_props)
+        self.graph.push()
         return True, ""
 
     def get_summary(self, issue_id, node_type):
