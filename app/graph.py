@@ -40,7 +40,7 @@ class Nodes(object):
             # nodes = [node.properties for node in self.graph.find(label)]
             # return nodes
 
-    def find_all_withUserID(self, label, user_id, **kwargs):
+    def find_all_with_user_id(self, label, user_id, **kwargs):
         """
         Similar to find_all, but filter with a specific user_id
         """
