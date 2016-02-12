@@ -17,7 +17,7 @@ class Nodes(object):
         Find all nodes in graph of a given `label` type
 
         If `parent_label` and `parent_id` keyword params are present then only
-        return nodes of type `label` that are children of the referenced parent node,
+        return nodes of type `label` that are children of the parent node,
         otherwise return all nodes of type `label`
         """
         parent = None
@@ -44,18 +44,21 @@ class Nodes(object):
         """
         Similar to find_all, but filter with a specific user_id
         """
-        query = """MATCH (p:`%s` {node_id: {p_id}})-->(n:`%s`)<-[r]-(u:User {node_id: {u_id}})
+        query = """MATCH (p:`%s` {node_id: {p_id}})-->(n:`%s`),
+                   (n)<-[r]-(u:User {node_id: {u_id}})
                    RETURN r.rank as rank, n.node_id as node_id"""
         query = query % (kwargs['parent_label'], label)
-        return [{'rank': m.rank, 'node_id': m.node_id} for m in self.graph.cypher.stream(
-            query, p_id=kwargs['parent_id'], u_id=user_id)]
+        return [{'rank': m.rank, 'node_id': m.node_id} for m in
+                self.graph.cypher.stream(
+                    query, p_id=kwargs['parent_id'], u_id=user_id)]
         # user = self.find("User", user_id)
         # if not user:
         #     return []
         # parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         # data = []
         # for link in parent.match():
-        #     link_user = self.graph.match_one(start_node=user, end_node=link.end_node)
+        #     link_user = self.graph.match_one(
+        #         start_node=user, end_node=link.end_node)
         #     if link_user and label in link_user.end_node.labels:
         #         data.append(dict(
         #             rank=link_user.properties["rank"],
@@ -81,8 +84,9 @@ class Links(object):
         self.graph = graph
 
     def find(self, start_node, end_node, rel_type):
-        args = dict(start_node=start_node, end_node=end_node, rel_type=rel_type)
-        return self.graph.match_one(**args)
+
+        return self.graph.match_one(
+            start_node=start_node, end_node=end_node, rel_type=rel_type)
 
     def create(self, src, dst, link_type, properties):
         link = self.find(src, dst, link_type)
