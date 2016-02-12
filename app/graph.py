@@ -20,10 +20,12 @@ class Nodes(object):
         return nodes of type `label` that are children of the referenced parent node,
         otherwise return all nodes of type `label`
         """
-        nodes = []
         parent = None
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
+            # TODO: Unfound parent should give none/error
+            # When all node types have been implemented, change to that behavior
+
         if parent:
             cypher = "MATCH (p:`{}` {{node_id: {{p_id}}}})-->(n:`{}`) RETURN n"
             cypher = cypher.format(kwargs['parent_label'], label)
@@ -32,9 +34,11 @@ class Nodes(object):
             # for link in parent.match_outgoing():
             #     if label in link.end_node.labels:
             #         nodes.append(link.end_node.properties)
+            # return nodes
         else:
             return [node.properties for node in self.graph.find(label)]
-        # return nodes
+            # nodes = [node.properties for node in self.graph.find(label)]
+            # return nodes
 
     def find_all_withUserID(self, label, user_id, **kwargs):
         """
