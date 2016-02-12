@@ -22,4 +22,4 @@ def Corr(x,y):
     return (n*sum_XY - sumX*sumY)/math.sqrt((n*sum_X_Square - sumX*sumX)*(n*sum_Y_Square-sumY*sumY));
 
 
-print Corr([2,5,6],[1,4,3])
+print Corr([-2,-5,-6],[1,4,3])
