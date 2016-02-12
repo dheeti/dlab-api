@@ -25,7 +25,7 @@ class Nodes(object):
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         if parent:
-            for link in parent.match():
+            for link in parent.match_outgoing():
                 if label in link.end_node.labels:
                     nodes.append(link.end_node.properties)
         else:
