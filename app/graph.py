@@ -177,12 +177,12 @@ class Graph(object):
 
         link = self.links.find(user, node, "RANKS")
         if link:
-            link.properties["rank"] = args["rank"]
+            link["rank"] = args["rank"]
             link.push()
         else:
             properties = {"rank": args["rank"]}
-            if "issue_id" in args:
-                properties["issue_id"] = args["issue_id"]
+            # if "issue_id" in args:
+            #     properties["issue_id"] = args["issue_id"]
             self.graph.create(Relationship(user, "RANKS", node, **properties))
         return True, ""
 
