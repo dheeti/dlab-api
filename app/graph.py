@@ -4,13 +4,13 @@ from py2neo import Graph as NeoGraph, Node, Relationship
 from app.mod_api.auth import Authenticate
 import uuid
 
+
 class Nodes(object):
     def __init__(self, graph):
         self.graph = graph
 
     def find(self, label, node_id):
-        args = dict(property_key="node_id", property_value=node_id)
-        return self.graph.find_one(label, **args)
+        return self.graph.find_one(label, "node_id", node_id)
 
     def find_all(self, label, **kwargs):
         """
