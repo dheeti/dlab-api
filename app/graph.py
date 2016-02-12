@@ -175,15 +175,9 @@ class Graph(object):
         if not node:
             return False, "invalid node_id"
 
-        link = self.links.find(user, node, "RANKS")
-        if link:
-            link["rank"] = args["rank"]
-            link.push()
-        else:
-            properties = {"rank": args["rank"]}
-            # if "issue_id" in args:
-            #     properties["issue_id"] = args["issue_id"]
-            self.graph.create(Relationship(user, "RANKS", node, **properties))
+        link, = self.graph.create_unique(Relationship(user, "RANKS", node))
+        link["rank"] = args["rank"]
+        link.push()
         return True, ""
 
     def user_map(self, args, src_node, dst_node):
