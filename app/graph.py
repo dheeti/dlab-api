@@ -25,7 +25,7 @@ class Nodes(object):
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         if parent:
-            cypher = "MATCH (p:`{}` {{node_id: '{{p_id}}'}})-->(n:`{}`) RETURN n"
+            cypher = "MATCH (p:`{}` {{node_id: {{p_id}}}})-->(n:`{}`) RETURN n"
             cypher = cypher.format(kwargs['parent_label'], label)
             return [r.n.properties for r in self.graph.cypher.stream(
                 cypher, p_id=kwargs['parent_id'])]
