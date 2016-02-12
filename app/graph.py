@@ -112,24 +112,20 @@ class Graph(object):
         self.links = Links(self.graph)
 
     def execute_raw(self, cqlfile):
-        cypher = self.graph.cypher
         with open(cqlfile, 'r') as query:
-            return cypher.execute(query.read())
-        return []
+            return self.graph.cypher.execute(query.read())
 
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
         if not node:
             passhash = Authenticate.hashgen(args["username"], args["password"])
-            properties = dict(
-                node_id=args["username"],
-                name=args["name"],
-                city=args["city"],
-                passhash=passhash
-            )
-            node = Node("User", **properties)
-            self.graph.create(node)
-            return node, True
+            properties = {
+                'node_id': args["username"],
+                'name': args["name"],
+                'city': args["city"],
+                'passhash': passhash
+            }
+            return self.graph.create(Node("User", **properties))[0], True
         return node, False
 
     def create_issue_nodes(
