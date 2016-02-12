@@ -171,6 +171,17 @@ def get_summary(args):
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
 
+
+"""
+Return data for sankey chart of correlation
+or ranking Value -> Objective and Objective -> Policy
+"""
+#@mod_api.route('/sankey', methods=["GET"])
+#@use_args(Args.post_map)
+#def get_sankey(args):
+#    return Handler.post_map(args, src_node, dst_node)
+
+
 """
 IN PROGRESS
 
