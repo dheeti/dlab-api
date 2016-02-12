@@ -233,24 +233,23 @@ class Graph(object):
         if not issue:
             return False, "issue <{0}> does not exist".format(issue_id), []
 
-        # TODO only grab nodes that are connected to issue node
-        cypher = self.graph.cypher
         query = """
-            MATCH (u:User)-[r:RANKS]-(v:`{0}`)
+            MATCH (u:User)-[r:RANKS]-(v:`{0}`),
+            (v)<-[:HAS]-(i:Issue)
+            WHERE i.node_id = {{issue_id}}
             RETURN
-                r.rank AS rank,
                 v.node_id AS node_id,
                 v.name AS name,
-                count(u.node_id) AS count
+                r.rank AS rank,
+                count(u) AS count
             ORDER BY
                 node_id, rank
         """.format(node_type)
-        results = cypher.execute(query)
         nodes = {}
         invalid = []
-        for row in results:
+        for row in self.graph.cypher.stream(query, issue_id=issue_id):
             if row.node_id not in nodes:
-                nodes[row.node_id] = dict(name=row.name, data=[0, 0, 0, 0, 0])
+                nodes[row.node_id] = {'name': row.name, 'data': [0, 0, 0, 0, 0]}
             if row.rank in range(-2, 3):
                 nodes[row.node_id]["data"][row.rank + 2] = row.count
             else:
