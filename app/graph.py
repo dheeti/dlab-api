@@ -44,19 +44,24 @@ class Nodes(object):
         """
         Similar to find_all, but filter with a specific user_id
         """
-        user = self.find("User", user_id)
-        if not user:
-            return []
-        parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
-        data = []
-        for link in parent.match():
-            link_user = self.graph.match_one(start_node=user, end_node=link.end_node)
-            if link_user and label in link_user.end_node.labels:
-                data.append(dict(
-                    rank=link_user.properties["rank"],
-                    node_id=link_user.end_node.properties["node_id"]
-                ))
-        return data
+        query = """MATCH (p:`%s` {node_id: {p_id}})-->(n:`%s`)<-[r]-(u:User {node_id: {u_id}})
+                   RETURN r.rank as rank, n.node_id as node_id"""
+        query = query % kwargs['parent_label'], label
+        return [{'rank': m.rank, 'node_id': m.node_id} for m in self.graph.cypher.stream(
+            query, p_id=kwargs['parent_id'], u_id=user_id)]
+        # user = self.find("User", user_id)
+        # if not user:
+        #     return []
+        # parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
+        # data = []
+        # for link in parent.match():
+        #     link_user = self.graph.match_one(start_node=user, end_node=link.end_node)
+        #     if link_user and label in link_user.end_node.labels:
+        #         data.append(dict(
+        #             rank=link_user.properties["rank"],
+        #             node_id=link_user.end_node.properties["node_id"]
+        #         ))
+        # return data
 
     def create(self, node_type, properties):
         node = Node(node_type, **properties)
