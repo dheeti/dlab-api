@@ -25,12 +25,16 @@ class Nodes(object):
         if "parent_label" in kwargs and "parent_id" in kwargs:
             parent = self.find(kwargs["parent_label"], kwargs["parent_id"])
         if parent:
-            for link in parent.match_outgoing():
-                if label in link.end_node.labels:
-                    nodes.append(link.end_node.properties)
+            cypher = "MATCH (p:`{}` {{node_id: '{{p_id}}'}})-->(n:`{}`) RETURN n"
+            cypher.format(kwargs['parent_label'], label)
+            return [r.n.properties for r in self.graph.cypher.stream(
+                cypher, p_id=kwargs['parent_id'])]
+            # for link in parent.match_outgoing():
+            #     if label in link.end_node.labels:
+            #         nodes.append(link.end_node.properties)
         else:
-            nodes = [node.properties for node in self.graph.find(label)]
-        return nodes
+            return [node.properties for node in self.graph.find(label)]
+        # return nodes
 
     def find_all_withUserID(self, label, user_id, **kwargs):
         """
