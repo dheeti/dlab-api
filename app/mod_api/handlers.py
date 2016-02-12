@@ -6,6 +6,8 @@ from flask import jsonify, session
 from app import graph, CQLDIR
 from app.mod_api.auth import Authenticate
 
+from app.CorrXY import Corr
+
 
 class Handler(object):
     """
@@ -108,3 +110,40 @@ class Handler(object):
                 if pctdev > 0.2:
                     print(row.value, row.objective, i, row.stddev, pctdev)
         return jsonify({})
+
+    @staticmethod
+    def get_sankey(issue_id):
+        filename_vo = "sankey_value_objective.cql"
+        results_vo = graph.execute_raw(os.path.join(CQLDIR, filename_vo))
+        filename_op = "sankey_objective_policy.cql"
+        results_op = graph.execute_raw(os.path.join(CQLDIR, filename_op))
+        
+        nodes = []
+        links = []
+        node_lookup = {}
+        
+        for row in results_vo:
+            if row.vid not in node_lookup:
+                nodes.append(dict(name=row.vname))
+                node_lookup[row.vid] = len(nodes) - 1
+            if row.oid not in node_lookup:
+                nodes.append(dict(name=row.oname))
+                node_lookup[row.oid] = len(nodes) - 1
+        for row in results_op:
+            if row.pid not in node_lookup:
+                nodes.append(dict(name=row.pname))
+                node_lookup[row.pid] = len(nodes) - 1
+        for row in results_vo:
+            corr = Corr(row.vranks, row.oranks)
+            data = dict(
+                source=node_lookup[row.vid], target=node_lookup[row.oid], value=corr
+            )
+            links.append(data)
+        for row in results_op:
+            corr = Corr(row.oranks, row.pranks)
+            data = dict(
+                source=node_lookup[row.oid], target=node_lookup[row.pid], value=corr
+            )
+            links.append(data)
+        
+        return jsonify(nodes=nodes, links=links)
