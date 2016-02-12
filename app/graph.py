@@ -129,26 +129,25 @@ class Graph(object):
         return node, False
 
     def create_issue_nodes(
-            self, parent, names, node_type, link_type="HAS", link_prop={}):
-        # support function for create_issue 
-	# create nodes of 1 type (value/objective/policy)
-	# and link those to the sourceNode, with specified linkType and properties
+            self, parent, names, node_type, link_type="HAS", link_prop=None):
+        # support function for create_issue
+        # create nodes of 1 type (value/objective/policy) and link those
+        # to the sourceNode, with specified linkType and properties
+        if link_prop is None:
+            link_prop = {}
         nodes = []
         for name in names:
-            properties = dict(
-                node_id=str(uuid.uuid4()),
-                name=name
-            )
+            properties = {'node_id': str(uuid.uuid4()), 'name': name}
             node = Node(node_type, **properties)
-            self.graph.create(node)
-            self.graph.create(Relationship(parent, link_type, node, **link_prop))
+            self.graph.create(
+                node, Relationship(parent, link_type, node, **link_prop))
             nodes.append(node)
         return nodes
 
     def create_issue(self, args):
         # create a new issue Node
         # assign a random node_id using python uuid module
-	# below try uuid4, uuid1 works as well 
+        # below try uuid4, uuid1 works as well
         issue_properties = dict(
                 node_id=str(uuid.uuid4()),
                 name=args["issue_name"],
