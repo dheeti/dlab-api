@@ -12,8 +12,8 @@ from app.mod_api.args import Args
 
 """
 This file contains all of the routes our api can process. When a HTTP request
-is made that mades one of our routes, that request will be passed to the function
-registered to handle it. A HTTP response will be constructed and sent
+is made that mades one of our routes, that request will be passed to the
+function registered to handle it. A HTTP response will be constructed and sent
 back to the client.
 
 The process for handling most requests is:
@@ -26,10 +26,10 @@ which is used to validate the request that all the required fields are present.
     + Args definition is passed to function with `@use_args` decorator and
     then passed to handling function as an argument
 
-2. Pass the request arguments to it's appropriate Handler. The Handler is responsible
-for interacting with the graph to retrieve the requested data or update the state
-of the system. All Handler methods will return a json response object that is sent
-to the client.
+2. Pass the request arguments to it's appropriate Handler. The Handler is
+responsible for interacting with the graph to retrieve the requested data or
+update the state of the system. All Handler methods will return a json response
+object that is sent to the client.
 
     + See `/app/mod_api/handlers.py`
     + Most of the heavy lifting for the database is done using a graph
@@ -44,58 +44,54 @@ to the client.
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
 
-"""
-default error handler when request arguments do not match required arguments
-as specified by use_args() input
-"""
 @mod_api.errorhandler(422)
 def handle_bad_request(err):
+    """
+    default error handler when request arguments do not match required arguments
+    as specified by use_args() input
+    """
     data = getattr(err, 'data')
-    if data: message = data['exc'].messages
-    else: message = "invalid request"
-    return jsonify({"error": message }), 422
+    message = data['exc'].messages if data else "invalid request"
+    return jsonify({"error": message}), 422
 
 
-"""
-api index
-"""
 @mod_api.route('')
 def api_index():
+    """
+    api index
+    """
     return Handler.index()
 
 
-"""
-create a new user
-"""
 @mod_api.route('/user', methods=["POST"])
 @use_args(Args.post_user)
 def post_user(args):
+    """
+    create a new user
+    """
     return Handler.post_user(args)
 
 
-"""
-authenticate user
-"""
 @mod_api.route('/login', methods=["POST"])
 @use_args(Args.post_login)
 def post_login(args):
+    """
+    authenticate user
+    """
     return Handler.post_login(args)
 
 
-"""
-create a new issue
-"""
-@mod_api.route('/issue',methods=["POST"])
+@mod_api.route('/issue', methods=["POST"])
 def post_issue():
+    """
+    create a new issue
+    """
     errors, data = Args.parse_post_issue(request.form)
     if errors:
         return jsonify(success=False, errors=errors)
     return Handler.post_issue(data)
 
 
-"""
-retrieve data about a node as specified by it's node_id
-"""
 @mod_api.route('/user', methods=['GET'])
 @mod_api.route('/issue', methods=['GET'])
 @mod_api.route('/value', methods=['GET'])
@@ -103,16 +99,19 @@ retrieve data about a node as specified by it's node_id
 @mod_api.route('/policy', methods=['GET'])
 @use_args(Args.get_node)
 def get_node(args):
+    """
+    retrieve data about a node as specified by it's node_id
+    """
     node = basename(request.path).capitalize()
     return Handler.get_node(args, node) 
 
 
-"""
-retrieve data about a node as specified by it's node_id
-"""
 @mod_api.route('/community', methods=['GET'])
 @use_args(Args.get_community)
 def get_community(args):
+    """
+    retrieve data about a node as specified by it's node_id
+    """
     node = basename(request.path).capitalize()
     if "id" in args:
         return Handler.get_node(args, node) 
@@ -120,65 +119,65 @@ def get_community(args):
         return Handler.get_nodes(node, None, args) 
 
 
-"""
-retrieve all nodes of a given type
-"""
 @mod_api.route('/community/issue', methods=['GET'])
 @mod_api.route('/issue/value', methods=['GET'])
 @mod_api.route('/issue/objective', methods=['GET'])
 @mod_api.route('/issue/policy', methods=['GET'])
 @use_args(Args.get_nodes)
 def get_nodes(args):
+    """
+    retrieve all nodes of a given type
+    """
     parent = basename(dirname(request.path)).capitalize()
     child = basename(request.path).capitalize()
     return Handler.get_nodes(child, parent, args) 
 
 
-"""
-apply a ranking to a specific node as a user
-"""
 @mod_api.route('/rank/issue', methods=["POST"])
 @mod_api.route('/rank/value', methods=["POST"])
 @mod_api.route('/rank/objective', methods=["POST"])
 @mod_api.route('/rank/policy', methods=["POST"])
 @use_args(Args.post_rank)
 def post_rank(args):
+    """
+    apply a ranking to a specific node as a user
+    """
     node = os.path.basename(request.path).capitalize()
     return Handler.post_rank(args, node)
 
 
-"""
-apply a mapping between nodes
-Value -> Objective || Objective -> Policy
-"""
 @mod_api.route('/map/value/objective', methods=["POST"])
 @mod_api.route('/map/objective/policy', methods=["POST"])
 @use_args(Args.post_map)
 def post_map(args):
+    """
+    apply a mapping between nodes
+    Value -> Objective || Objective -> Policy
+    """
     src_node = os.path.basename(os.path.dirname(request.path)).capitalize()
     dst_node = os.path.basename(request.path).capitalize()
     return Handler.post_map(args, src_node, dst_node)
 
 
-"""
-Generate summary for stacked bar chart visualization
-"""
 @mod_api.route('/summary/value', methods=['GET'])
 @mod_api.route('/summary/objective', methods=['GET'])
 @mod_api.route('/summary/policy', methods=['GET'])
 @use_args(Args.get_summary)
 def get_summary(args):
+    """
+    Generate summary for stacked bar chart visualization
+    """
     node_type = basename(request.path).capitalize()
     return Handler.get_summary(args, node_type)
 
 
-"""
-Return data for sankey chart of correlation
-or ranking Value -> Objective and Objective -> Policy
-"""
 @mod_api.route('/sankey', methods=["GET"])
 @use_args(Args.get_sankey)
 def get_sankey(args):
+    """
+    Return data for sankey chart of correlation
+    or ranking Value -> Objective and Objective -> Policy
+    """
     return Handler.get_sankey(args["issue_id"])
 
 
@@ -190,4 +189,4 @@ of the following ranking categories
 """
 #@mod_api.route('/sentiment', methods=['GET'])
 #def get_sentiment():
-#   return Handler.get_sentiment(
+#    return Handler.get_sentiment(

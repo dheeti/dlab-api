@@ -59,7 +59,7 @@ class Handler(object):
                     parent_id=args["filter_id"],
                     user_id=args["user_id"]
                 )
-                data = graph.nodes.find_all_withUserID(child_type, **kwargs)
+                data = graph.nodes.find_all_with_user_id(child_type, **kwargs)
             else:
                 kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
                 data = graph.nodes.find_all(child_type, **kwargs)
