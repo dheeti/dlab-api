@@ -113,10 +113,10 @@ class Handler(object):
 
     @staticmethod
     def get_sankey(issue_id):
-        filename_vo = "sankey_value_objective.cql"
-        results_vo = graph.execute_raw(os.path.join(CQLDIR, filename_vo))
-        filename_op = "sankey_objective_policy.cql"
-        results_op = graph.execute_raw(os.path.join(CQLDIR, filename_op))
+        valobj = os.path.join(CQLDIR, "sankey_value_objective.cql")
+        objpol = os.path.join(CQLDIR, "sankey_objective_policy.cql")
+        results_vo = graph.execute_raw(valobj, issue_id=issue_id)
+        results_op = graph.execute_raw(objpol, issue_id=issue_id)
         
         nodes = []
         links = []
@@ -134,9 +134,10 @@ class Handler(object):
                 nodes.append(dict(name=row.pname))
                 node_lookup[row.pid] = len(nodes) - 1
         for row in results_vo:
-            corr = Corr(row.vranks, row.oranks)
             data = dict(
-                source=node_lookup[row.vid], target=node_lookup[row.oid], value=corr
+                source=node_lookup[row.vid],
+                target=node_lookup[row.oid],
+                value=Corr(row.vranks, row.oranks)
             )
             links.append(data)
         for row in results_op:
