@@ -227,30 +227,25 @@ class Graph(object):
         issue = self.nodes.find("Issue", issue_id)
         if not issue:
             return False, "issue <{0}> does not exist".format(issue_id), []
-
         query = """
             MATCH (u:User)-[r:RANKS]-(v:`{0}`),
             (v)<-[:HAS]-(i:Issue)
             WHERE i.node_id = {{issue_id}}
-            AND r.rank >= -2 AND r.rank <= 2
-            WITH
+            RETURN
                 v.node_id AS node_id,
                 v.name AS name,
                 r.rank AS rank,
-                count(DISTINCT u) AS count
+                count(u) AS count
             ORDER BY
                 node_id, rank
-            RETURN node_id, name, COLLECT(count) AS data
-        """.format(node_type)
-        # for row in self.graph.cypher.stream(query, issue_id=issue_id):
-        nodes = {row.node_id: {'name': row.name, 'data': row.data}
-                 for row in self.graph.cypher.stream(query, issue_id=issue_id)}
-        invalid_query = """
-        MATCH (:User)-[r:RANKS]-(:`{0}`)<-[:HAS]-(i:Issue)
-        WHERE i.node_id = {{issue_id}}
-        AND (r.rank < -2 OR r.rank > 2)
-        RETURN r.rank as rank
-        """.format(node_type)
-        invalid = [row.rank for row in
-                   self.graph.cypher.stream(invalid_query, issue_id=issue_id)]
+        """.format(node_type) 
+        nodes = {}
+        invalid = []
+        for row in self.graph.cypher.stream(query, issue_id=issue_id):
+            if row.node_id not in nodes:
+                nodes[row.node_id] = {'name': row.name, 'data': [0, 0, 0, 0, 0]}
+            if row.rank in range(-2, 3):
+                nodes[row.node_id]["data"][row.rank + 2] = row.count
+            else:
+                invalid.append(row.rank)
         return True, nodes, invalid
