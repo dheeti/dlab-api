@@ -30,6 +30,8 @@ class GetSummaryTests(unittest.TestCase):
         self.check_status_code(rv.status_code)
         response = json.loads(rv.data)
         self.assertTrue(response["success"], msg="success not true")
+        for key, value in response["data"].iteritems():
+            self.assertIs(len(value["data"]), 5)
 
 
 if __name__ == '__main__':
