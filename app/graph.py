@@ -111,9 +111,9 @@ class Graph(object):
         self.nodes = Nodes(self.graph)
         self.links = Links(self.graph)
 
-    def execute_raw(self, cqlfile):
+    def execute_raw(self, cqlfile, **kwargs):
         with open(cqlfile, 'r') as query:
-            return self.graph.cypher.execute(query.read())
+            return self.graph.cypher.execute(query.read(), parameters=kwargs)
 
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
