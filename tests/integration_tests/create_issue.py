@@ -37,8 +37,21 @@ class CreateIssueTest(unittest.TestCase):
         self.issue_node = graph.nodes.find("Issue", response["issue_id"])
         assert self.issue_node, "No matching node found"
         assert self.issue_node.properties["name"] == self.name
-        # TODO
-        # check relationships and children nodes were created
+        
+        values=[]
+        objectives=[]
+        policies=[]
+        for link in self.issue_node.match_outgoing():
+            end_node = link.end_node
+            if "Value" in end_node.labels:
+                values.append(end_node['name'])
+            if "Objective" in end_node.labels:
+                objectives.append(end_node['name'])
+            if "Policy" in end_node.labels:
+                policies.append(end_node['name'])
+        self.assertEqual(sorted(values),self.params["values"])
+        self.assertEqual(sorted(objectives),self.params["objectives"])
+        self.assertEqual(sorted(policies),self.params["policies"])
 
     def check_status_code(self, code):
         assert code == 200, "status code not 200"
