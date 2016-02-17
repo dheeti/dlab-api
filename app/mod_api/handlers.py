@@ -20,8 +20,9 @@ class Handler(object):
 
     @staticmethod
     def post_login(args):
-        success, error = Authenticate.login(graph, session, args)
-        return jsonify(success=success, error=error)
+        print args
+        success, error, is_admin = Authenticate.login(graph, session, args)
+        return jsonify(success=success, error=error,is_admin=is_admin)
 
     @staticmethod
     def get_node(args, node_type):

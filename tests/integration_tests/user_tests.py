@@ -11,7 +11,7 @@ sys.path.append(root)
 
 from app import app, graph
 from shared import safe_json_loads
-
+from app.mod_api.auth import Authenticate
 
 PASSWORD = "password"
 
@@ -25,7 +25,8 @@ class UserTest(unittest.TestCase):
             username=self.user_id,
             name="Test",
             city="Portland",
-            password="password"
+            password="password",
+            is_admin=False
         )
 
     def tearDown(self):
@@ -67,7 +68,25 @@ class CreateExistingUserTest(UserTest):
         )
         self.assertEqual(response, expected)
        
+class CreateAdminUserTest(UserTest):
+        
+    def test(self):
+        self.data["is_admin"] = True
+        graph.nodes.delete("User", self.user_id)
+       
+        # submit POST request to create a user that already exists
+        rv = self.app.post(self.endpoint, data=self.data)
 
+        # confirm JSON response matches what we expect
+        node = graph.nodes.find("User", self.user_id)
+        self.assertIsNotNone(node, msg="User node is null")
+        self.assertEqual(node.properties["node_id"], self.user_id)
+        self.assertEqual(node.properties["is_admin"], True)
+
+        success, error, is_admin = Authenticate.login(graph, None, dict(username=self.data["username"],
+                                             password=self.data["password"]))
+        self.assertEqual(is_admin,True)
+ 
 class GetExistingUserTest(UserTest):
 
     def test(self):

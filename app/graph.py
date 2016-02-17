@@ -117,13 +117,16 @@ class Graph(object):
 
     def create_user(self, args):
         node = self.nodes.find("User", args["username"])
+        if "is_admin" not in args:
+            args["is_admin"] = False
         if not node:
             passhash = Authenticate.hashgen(args["username"], args["password"])
             properties = {
                 'node_id': args["username"],
                 'name': args["name"],
                 'city': args["city"],
-                'passhash': passhash
+                'passhash': passhash,
+                'is_admin': args["is_admin"]
             }
             return self.graph.create(Node("User", **properties))[0], True
         return node, False
