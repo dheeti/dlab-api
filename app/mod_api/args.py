@@ -77,7 +77,7 @@ class Args(object):
         'password':fields.Str(required=True),
         'name':fields.Str(required=True),
         'city':fields.Str(required=True),
-        'is_admin':fields.Boolean(required=True,default=False)
+        'is_admin':fields.Boolean(required=False,default=False)
     }
     
     """
