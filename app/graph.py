@@ -109,7 +109,7 @@ class Graph(object):
                 name=args["name"],
                 city=args["city"],
                 passhash=passhash,
-                is_admin=args["is_admin"]
+                is_admin="true"
             )
             node = Node("User", **properties)
             self.graph.create(node)
