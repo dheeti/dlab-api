@@ -9,11 +9,11 @@ class Authenticate(object):
         error = "invalid username-password combination"
         user = graph.nodes.find("User", args["username"])
         if not user:
-            return False, error
+            return False, error, False
         passhash = Authenticate.hashgen(args["username"], args["password"])
         if passhash != user.properties["passhash"]:
-            return False, error
-        return True, ""
+            return False, error, False
+        return True, "", user["is_admin"]
 
     @staticmethod
     def hashgen(username, password):

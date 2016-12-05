@@ -20,8 +20,9 @@ class Handler(object):
 
     @staticmethod
     def post_login(args):
-        success, error = Authenticate.login(graph, session, args)
-        return jsonify(success=success, error=error)
+        print args
+        success, error, is_admin = Authenticate.login(graph, session, args)
+        return jsonify(success=success, error=error,is_admin=is_admin)
 
     @staticmethod
     def get_node(args, node_type):
@@ -59,7 +60,7 @@ class Handler(object):
                     parent_id=args["filter_id"],
                     user_id=args["user_id"]
                 )
-                data = graph.nodes.find_all_withUserID(child_type, **kwargs)
+                data = graph.nodes.find_all_with_user_id(child_type, **kwargs)
             else:
                 kwargs = dict(parent_label=parent_type, parent_id=args["filter_id"])
                 data = graph.nodes.find_all(child_type, **kwargs)
@@ -113,10 +114,10 @@ class Handler(object):
 
     @staticmethod
     def get_sankey(issue_id):
-        filename_vo = "sankey_value_objective.cql"
-        results_vo = graph.execute_raw(os.path.join(CQLDIR, filename_vo))
-        filename_op = "sankey_objective_policy.cql"
-        results_op = graph.execute_raw(os.path.join(CQLDIR, filename_op))
+        valobj = os.path.join(CQLDIR, "sankey_value_objective.cql")
+        objpol = os.path.join(CQLDIR, "sankey_objective_policy.cql")
+        results_vo = graph.execute_raw(valobj, issue_id=issue_id)
+        results_op = graph.execute_raw(objpol, issue_id=issue_id)
         
         nodes = []
         links = []
@@ -134,9 +135,10 @@ class Handler(object):
                 nodes.append(dict(name=row.pname))
                 node_lookup[row.pid] = len(nodes) - 1
         for row in results_vo:
-            corr = Corr(row.vranks, row.oranks)
             data = dict(
-                source=node_lookup[row.vid], target=node_lookup[row.oid], value=corr
+                source=node_lookup[row.vid],
+                target=node_lookup[row.oid],
+                value=Corr(row.vranks, row.oranks)
             )
             links.append(data)
         for row in results_op:

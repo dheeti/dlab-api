@@ -1,6 +1,5 @@
 MATCH
-    (u:User)-[r1:RANKS]-(v:Value),
-    (u:User)-[r2:RANKS]-(o:Objective)
+    (v:Value)-[r1:RANKS]-(u:User)-[r2:RANKS]-(o:Objective)
 WITH
     v.node_id AS v,
     v.name AS vname,
@@ -23,7 +22,7 @@ WITH
         WHEN 1 THEN 1
         WHEN 2 THEN 1
     END AS r2group,
-    COUNT(u.node_id) AS count
+    COUNT(distinct u) AS count
 WHERE r1group <> 0 and r2group <> 0
 WITH
     vname, oname,
